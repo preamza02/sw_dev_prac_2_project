@@ -1,5 +1,8 @@
 # sw_dev_prac_2_project
 
+MONGO_URI=mongodb+srv://SwDev2Project:SwDev2Project@swdevprac2project.fuxqq.mongodb.net/?retryWrites=true&w=majority&appName=SwDevPrac2Project
+
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
