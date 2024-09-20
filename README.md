@@ -4,6 +4,26 @@ MONGO_URI=mongodb+srv://SwDev2Project:SwDev2Project@swdevprac2project.fuxqq.mong
 
 agoda gogo 2 page for golden armor warrior
 
+ADMIN_USER
+{
+  "name": "mockAdmin",
+  "email": "mockAdmin@gmail.com",
+  "tel": "0999999999",
+  "role": "admin",
+  "password": "mockAdmin",
+  "createdAt": "2023-08-20"
+}
+
+USER
+{
+  "name": "mockUser",
+  "email": "mockUser@gmail.com",
+  "tel": "0999999999",
+  "role": "user",
+  "password": "mockUser",
+  "createdAt": "2023-08-20"
+}
+
 
 https://www.figma.com/design/FZyZXHs2ts06VutHPVeagU/Untitled?node-id=0-1&t=69ITgeQTQ9WceOAI-1
 
