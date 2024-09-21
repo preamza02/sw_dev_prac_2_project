@@ -1,7 +1,6 @@
-export default function main() {
-    return (
-        <main>
-            <p>525</p>
-        </main>
-    )
+export default function MainHomePage() {
+
+  return (
+    <div>5555</div>
+  );
 }
