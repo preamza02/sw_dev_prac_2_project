@@ -1,14 +1,23 @@
 "use client"
 import AuthContainer from "../_component/authContainer";
 import LinkButton from "@/app/_components/linkButton";
+import ActionButton from "@/app/_components/actionButton";
 import AuthFormElement from "../_component/authFormElement";
-import { HotelsApi } from "@/api/gen";
+import { UserApi } from "@/api/gen";
 import { useState } from "react";
 export default function LoginHomePage() {
-    const hotelApi = new HotelsApi()
-    hotelApi.hotelsGet().then(value => console.log(value))
+    const userAPI = new UserApi()
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
+    const loginOnclick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        console.log(email, password)
+        userAPI.authLoginPost({
+            loginUserRequest: {
+                email: email,
+                password: password
+            }
+        }).then(value => console.log(value))
+    }
     return (
         <AuthContainer>
             <div className="flex flex-col space-y-1">
@@ -21,8 +30,8 @@ export default function LoginHomePage() {
                 <AuthFormElement title="Password" value={password} setValue={setPassword} type="password"></AuthFormElement>
             </div>
             <div className="space-y-2 w-4/5 mx-auto">
-                <LinkButton link="Enter" title="Enter" bgColor="#4190ED" textColor="#FFFFFF"></LinkButton>
-                <LinkButton link="Register" title="Register" bgColor="#FFFFFF" textColor="#000000"></LinkButton>
+                <ActionButton onClick={loginOnclick} title="Login" bgColor="#4190ED" textColor="#FFFFFF"></ActionButton>
+                <LinkButton link="register" title="Register" bgColor="#FFFFFF" textColor="#000000"></LinkButton>
             </div>
         </AuthContainer>
     );
