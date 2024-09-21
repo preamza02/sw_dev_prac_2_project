@@ -12,6 +12,11 @@ const config: Config = {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      fontFamily: {
+        itim: ['var(--font-itim--)'],
+        sans: ['var(--font-itim--)'],
+        mono: ['var(--font-roboto-mono)'],
+      },
     },
   },
   plugins: [],

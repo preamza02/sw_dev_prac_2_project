@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import React from "react";
 import '../globals.css'
 import NavBar from "../_components/navbar";
+import localFont from 'next/font/local'
 
 export const metadata: Metadata = {
     title: "Create Next App",
@@ -15,7 +16,7 @@ export default function LoginLayout({
 }>) {
     return (
         <html lang="en">
-            <body className="min-h-screen min-w-screen flex flex-col">
+            <body className={`min-h-screen min-w-screen flex flex-col`}>
                 <NavBar></NavBar>
                 <div className="bg-[#F9F9F9] h-full flex flex-1 justify-center items-center w-screen">
                     {children}
