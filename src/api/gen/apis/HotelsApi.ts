@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * Library API
- * Hotel Booking API
+ * Hotel Booking and Authentication API
+ * API for managing hotels, bookings, and user authentication
  *
  * The version of the OpenAPI document: 1.0.0
  * 
@@ -15,12 +15,37 @@
 
 import * as runtime from '../runtime';
 import type {
+  BadRequest400Response,
+  CreateHotel201Response,
+  DeleteHotel200Response,
+  GetHotelById200Response,
+  GetHotels200Response,
   Hotel,
+  UpdateHotel200Response,
 } from '../models/index';
 import {
+    BadRequest400ResponseFromJSON,
+    BadRequest400ResponseToJSON,
+    CreateHotel201ResponseFromJSON,
+    CreateHotel201ResponseToJSON,
+    DeleteHotel200ResponseFromJSON,
+    DeleteHotel200ResponseToJSON,
+    GetHotelById200ResponseFromJSON,
+    GetHotelById200ResponseToJSON,
+    GetHotels200ResponseFromJSON,
+    GetHotels200ResponseToJSON,
     HotelFromJSON,
     HotelToJSON,
+    UpdateHotel200ResponseFromJSON,
+    UpdateHotel200ResponseToJSON,
 } from '../models/index';
+
+export interface HotelsGetRequest {
+    select?: string;
+    sort?: string;
+    page?: number;
+    limit?: number;
+}
 
 export interface HotelsIdDeleteRequest {
     id: string;
@@ -45,10 +70,26 @@ export interface HotelsPostRequest {
 export class HotelsApi extends runtime.BaseAPI {
 
     /**
-     * Returns the list of all the hotels
+     * Get all hotels
      */
-    async hotelsGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Hotel>>> {
+    async hotelsGetRaw(requestParameters: HotelsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetHotels200Response>> {
         const queryParameters: any = {};
+
+        if (requestParameters['select'] != null) {
+            queryParameters['select'] = requestParameters['select'];
+        }
+
+        if (requestParameters['sort'] != null) {
+            queryParameters['sort'] = requestParameters['sort'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['limit'] != null) {
+            queryParameters['limit'] = requestParameters['limit'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -59,21 +100,21 @@ export class HotelsApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(HotelFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => GetHotels200ResponseFromJSON(jsonValue));
     }
 
     /**
-     * Returns the list of all the hotels
+     * Get all hotels
      */
-    async hotelsGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Hotel>> {
-        const response = await this.hotelsGetRaw(initOverrides);
+    async hotelsGet(requestParameters: HotelsGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetHotels200Response> {
+        const response = await this.hotelsGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Delete the hotel by id
+     * Delete a single hotel
      */
-    async hotelsIdDeleteRaw(requestParameters: HotelsIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Hotel>> {
+    async hotelsIdDeleteRaw(requestParameters: HotelsIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DeleteHotel200Response>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
@@ -85,14 +126,6 @@ export class HotelsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("bearerAuth", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
         const response = await this.request({
             path: `/hotels/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'DELETE',
@@ -100,13 +133,13 @@ export class HotelsApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => HotelFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => DeleteHotel200ResponseFromJSON(jsonValue));
     }
 
     /**
-     * Delete the hotel by id
+     * Delete a single hotel
      */
-    async hotelsIdDelete(requestParameters: HotelsIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Hotel> {
+    async hotelsIdDelete(requestParameters: HotelsIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DeleteHotel200Response> {
         const response = await this.hotelsIdDeleteRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -114,7 +147,7 @@ export class HotelsApi extends runtime.BaseAPI {
     /**
      * Get the hotel by id
      */
-    async hotelsIdGetRaw(requestParameters: HotelsIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Hotel>> {
+    async hotelsIdGetRaw(requestParameters: HotelsIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetHotelById200Response>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
@@ -133,21 +166,21 @@ export class HotelsApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => HotelFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => GetHotelById200ResponseFromJSON(jsonValue));
     }
 
     /**
      * Get the hotel by id
      */
-    async hotelsIdGet(requestParameters: HotelsIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Hotel> {
+    async hotelsIdGet(requestParameters: HotelsIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetHotelById200Response> {
         const response = await this.hotelsIdGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Update the hotel by id
+     * Update a single hotel
      */
-    async hotelsIdPutRaw(requestParameters: HotelsIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Hotel>> {
+    async hotelsIdPutRaw(requestParameters: HotelsIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UpdateHotel200Response>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
@@ -168,14 +201,6 @@ export class HotelsApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("bearerAuth", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
         const response = await this.request({
             path: `/hotels/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'PUT',
@@ -184,13 +209,13 @@ export class HotelsApi extends runtime.BaseAPI {
             body: HotelToJSON(requestParameters['hotel']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => HotelFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => UpdateHotel200ResponseFromJSON(jsonValue));
     }
 
     /**
-     * Update the hotel by id
+     * Update a single hotel
      */
-    async hotelsIdPut(requestParameters: HotelsIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Hotel> {
+    async hotelsIdPut(requestParameters: HotelsIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UpdateHotel200Response> {
         const response = await this.hotelsIdPutRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -198,7 +223,7 @@ export class HotelsApi extends runtime.BaseAPI {
     /**
      * Create a new hotel
      */
-    async hotelsPostRaw(requestParameters: HotelsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Hotel>> {
+    async hotelsPostRaw(requestParameters: HotelsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CreateHotel201Response>> {
         if (requestParameters['hotel'] == null) {
             throw new runtime.RequiredError(
                 'hotel',
@@ -212,14 +237,6 @@ export class HotelsApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("bearerAuth", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
         const response = await this.request({
             path: `/hotels`,
             method: 'POST',
@@ -228,13 +245,13 @@ export class HotelsApi extends runtime.BaseAPI {
             body: HotelToJSON(requestParameters['hotel']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => HotelFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => CreateHotel201ResponseFromJSON(jsonValue));
     }
 
     /**
      * Create a new hotel
      */
-    async hotelsPost(requestParameters: HotelsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Hotel> {
+    async hotelsPost(requestParameters: HotelsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateHotel201Response> {
         const response = await this.hotelsPostRaw(requestParameters, initOverrides);
         return await response.value();
     }

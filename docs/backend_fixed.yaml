@@ -1,0 +1,722 @@
+openapi: "3.0.0"
+info:
+  title: "Hotel Booking and Authentication API"
+  version: "1.0.0"
+  description: "API for managing hotels, bookings, and user authentication"
+servers:
+  - url: "http://localhost:5000/api/v1"
+
+paths:
+  /auth/register:
+    post:
+      summary: "Register a new user"
+      tags:
+        - "User"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterUserRequest"
+      responses:
+        "200":
+          description: "User registered successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          description: "Bad request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest400Response"
+
+  /auth/login:
+    post:
+      summary: "Log in an existing user"
+      tags:
+        - "User"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginUserRequest"
+      responses:
+        "200":
+          description: "User logged in successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          description: "Invalid credentials"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest400Response"
+        "401":
+          description: "Unauthorized or invalid credentials"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized401Response"
+
+  /auth/me:
+    get:
+      summary: "Get the current logged-in user"
+      tags:
+        - "User"
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: "User information"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetMeResponse"
+        "401":
+          description: "Unauthorized"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized401Response"
+
+  /auth/logout:
+    get:
+      summary: "Log out the current user"
+      tags:
+        - "User"
+      responses:
+        "200":
+          description: "User logged out successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LogoutResponse"
+
+  /hotels:
+    get:
+      summary: "Get all hotels"
+      tags:
+        - "Hotels"
+      parameters:
+        - in: "query"
+          name: "select"
+          schema:
+            type: "string"
+          description: "Fields to include in the response"
+        - in: "query"
+          name: "sort"
+          schema:
+            type: "string"
+          description: "Sort by field"
+        - in: "query"
+          name: "page"
+          schema:
+            type: "integer"
+          description: "Page number for pagination"
+        - in: "query"
+          name: "limit"
+          schema:
+            type: "integer"
+          description: "Number of results per page"
+      responses:
+        "200":
+          description: "A list of hotels with pagination"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetHotels200Response"
+        "400":
+          description: "Bad request or error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest400Response"
+    post:
+      summary: "Create a new hotel"
+      tags:
+        - "Hotels"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Hotel"
+      responses:
+        "201":
+          description: "The hotel was successfully created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateHotel201Response"
+        "400":
+          description: "Bad request or validation error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest400Response"
+
+  /hotels/{id}:
+    get:
+      summary: "Get the hotel by id"
+      tags:
+        - "Hotels"
+      parameters:
+        - in: "path"
+          name: "id"
+          schema:
+            type: "string"
+          required: true
+          description: "The hotel id"
+      responses:
+        "200":
+          description: "The hotel description by id"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetHotelById200Response"
+        "400":
+          description: "Hotel not found or bad request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest400Response"
+    put:
+      summary: "Update a single hotel"
+      tags:
+        - "Hotels"
+      parameters:
+        - in: "path"
+          name: "id"
+          schema:
+            type: "string"
+          required: true
+          description: "The hotel id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Hotel"
+      responses:
+        "200":
+          description: "The hotel was successfully updated"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateHotel200Response"
+        "400":
+          description: "Hotel not found or bad request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest400Response"
+    delete:
+      summary: "Delete a single hotel"
+      tags:
+        - "Hotels"
+      parameters:
+        - in: "path"
+          name: "id"
+          schema:
+            type: "string"
+          required: true
+          description: "The hotel id"
+      responses:
+        "200":
+          description: "The hotel was successfully deleted"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteHotel200Response"
+        "400":
+          description: "Hotel not found or bad request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest400Response"
+
+  /bookings:
+    get:
+      summary: "Get all bookings"
+      tags:
+        - "Bookings"
+      parameters:
+        - in: "query"
+          name: "hotelId"
+          schema:
+            type: "string"
+          description: "Filter bookings by hotel id"
+      responses:
+        "200":
+          description: "A list of bookings"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetBookings200Response"
+        "500":
+          description: "Server error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerError500Response"
+
+  /bookings/{id}:
+    get:
+      summary: "Get a single booking by id"
+      tags:
+        - "Bookings"
+      parameters:
+        - in: "path"
+          name: "id"
+          schema:
+            type: "string"
+          required: true
+          description: "The booking id"
+      responses:
+        "200":
+          description: "Booking details"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetBookingById200Response"
+        "404":
+          description: "Booking not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFound404Response"
+        "401":
+          description: "Unauthorized access"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized401Response"
+    put:
+      summary: "Update a booking"
+      tags:
+        - "Bookings"
+      parameters:
+        - in: "path"
+          name: "id"
+          schema:
+            type: "string"
+          required: true
+          description: "The booking id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateBookingRequest"
+      responses:
+        "200":
+          description: "Booking updated"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateBooking200Response"
+        "400":
+          description: "Invalid booking data"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest400Response"
+        "404":
+          description: "Booking not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFound404Response"
+        "500":
+          description: "Cannot update booking"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerError500Response"
+    delete:
+      summary: "Delete a booking"
+      tags:
+        - "Bookings"
+      parameters:
+        - in: "path"
+          name: "id"
+          schema:
+            type: "string"
+          required: true
+          description: "The booking id"
+      responses:
+        "200":
+          description: "Booking deleted"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteBooking200Response"
+        "404":
+          description: "Booking not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFound404Response"
+        "500":
+          description: "Cannot delete booking"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerError500Response"
+
+  /hotels/{hotelId}/bookings:
+    post:
+      summary: "Create a booking for a hotel"
+      tags:
+        - "Bookings"
+      parameters:
+        - in: "path"
+          name: "hotelId"
+          schema:
+            type: "string"
+          required: true
+          description: "The hotel id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddBookingRequest"
+      responses:
+        "200":
+          description: "Booking created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateBooking200Response"
+        "400":
+          description: "Invalid booking data"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest400Response"
+        "500":
+          description: "Cannot create booking"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerError500Response"
+components:
+  schemas:
+    RegisterUserRequest:
+      type: "object"
+      required:
+        - name
+        - email
+        - tel
+        - password
+      properties:
+        name:
+          type: "string"
+          description: "The user's name"
+        email:
+          type: "string"
+          format: "email"
+          description: "The user's email address"
+        tel:
+          type: "string"
+          description: "The user's telephone number"
+        password:
+          type: "string"
+          format: "password"
+          description: "The user's password"
+        role:
+          type: "string"
+          description: "The user's role (admin/user)"
+
+    LoginUserRequest:
+      type: "object"
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: "string"
+          format: "email"
+          description: "The user's email address"
+        password:
+          type: "string"
+          format: "password"
+          description: "The user's password"
+
+    AuthResponse:
+      type: "object"
+      properties:
+        success:
+          type: "boolean"
+        _id:
+          type: "string"
+          description: "User's ID"
+        name:
+          type: "string"
+          description: "User's name"
+        email:
+          type: "string"
+          description: "User's email address"
+        token:
+          type: "string"
+          description: "JWT token for the user"
+
+    GetMeResponse:
+      type: "object"
+      properties:
+        success:
+          type: "boolean"
+        data:
+          $ref: "#/components/schemas/User"
+
+    LogoutResponse:
+      type: "object"
+      properties:
+        success:
+          type: "boolean"
+        data:
+          type: "object"
+          example: {}
+
+    GetHotels200Response:
+      type: "object"
+      required:
+        - success
+        - count
+        - pagination
+        - data
+      properties:
+        success:
+          type: "boolean"
+          example: true
+        count:
+          type: "integer"
+        pagination:
+          type: "object"
+          properties:
+            next:
+              type: "object"
+              properties:
+                page:
+                  type: "integer"
+                limit:
+                  type: "integer"
+            prev:
+              type: "object"
+              properties:
+                page:
+                  type: "integer"
+                limit:
+                  type: "integer"
+        data:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Hotel"
+
+    GetHotelById200Response:
+      type: "object"
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: "boolean"
+          example: true
+        data:
+          $ref: "#/components/schemas/Hotel"
+
+    CreateHotel201Response:
+      type: "object"
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: "boolean"
+          example: true
+        data:
+          $ref: "#/components/schemas/Hotel"
+
+    UpdateHotel200Response:
+      type: "object"
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: "boolean"
+          example: true
+        data:
+          $ref: "#/components/schemas/Hotel"
+
+    DeleteHotel200Response:
+      type: "object"
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: "boolean"
+          example: true
+        data:
+          type: "object"
+          description: "An empty object as the hotel was deleted"
+          example: {}
+
+    GetBookings200Response:
+      type: "object"
+      properties:
+        success:
+          type: "boolean"
+        count:
+          type: "integer"
+        data:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Booking"
+
+    GetBookingById200Response:
+      type: "object"
+      properties:
+        success:
+          type: "boolean"
+        data:
+          $ref: "#/components/schemas/Booking"
+
+    CreateBooking200Response:
+      type: "object"
+      properties:
+        success:
+          type: "boolean"
+        data:
+          $ref: "#/components/schemas/Booking"
+
+    UpdateBooking200Response:
+      type: "object"
+      properties:
+        success:
+          type: "boolean"
+        data:
+          $ref: "#/components/schemas/Booking"
+
+    AddBookingRequest:
+      type: "object"
+      properties:
+        bookingDate:
+          type: "string"
+          format: "date"
+        checkoutDate:
+          type: "string"
+          format: "date"
+
+    UpdateBookingRequest:
+      type: "object"
+      properties:
+        bookingDate:
+          type: "string"
+          format: "date"
+        checkoutDate:
+          type: "string"
+          format: "date"
+
+    DeleteBooking200Response:
+      type: "object"
+      properties:
+        success:
+          type: "boolean"
+        data:
+          type: "object"
+          example: {}
+
+    BadRequest400Response:
+      type: "object"
+      required:
+        - success
+      properties:
+        success:
+          type: "boolean"
+          example: false
+        message:
+          type: "string"
+          example: "Error message describing the issue"
+
+    Unauthorized401Response:
+      type: "object"
+      properties:
+        success:
+          type: "boolean"
+        message:
+          type: "string"
+
+    NotFound404Response:
+      type: "object"
+      properties:
+        success:
+          type: "boolean"
+        message:
+          type: "string"
+
+    ServerError500Response:
+      type: "object"
+      properties:
+        success:
+          type: "boolean"
+        message:
+          type: "string"
+
+    Booking:
+      type: "object"
+      properties:
+        _id:
+          type: "string"
+        bookingDate:
+          type: "string"
+          format: "date"
+          description: "Booking start date"
+        checkoutDate:
+          type: "string"
+          format: "date"
+          description: "Booking end date"
+        hotel:
+          $ref: "#/components/schemas/Hotel"
+        user:
+          $ref: "#/components/schemas/User"
+
+    User:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        email:
+          type: "string"
+        tel:
+          type: "string"
+
+    Hotel:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        address:
+          type: "string"
+        tel:
+          type: "string"
+  securitySchemes:
+    bearerAuth:
+      type: "http"
+      scheme: "bearer"
+      bearerFormat: "JWT"
+
+tags:
+  - name: "User"
+    description: "The user API"
+  - name: "Bookings"
+    description: "The booking managing API"
+  - name: "Hotels"
+    description: "The hotels managing API"

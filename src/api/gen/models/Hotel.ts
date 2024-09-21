@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * Library API
- * Hotel Booking API
+ * Hotel Booking and Authentication API
+ * API for managing hotels, bookings, and user authentication
  *
  * The version of the OpenAPI document: 1.0.0
  * 
@@ -20,59 +20,29 @@ import { mapValues } from '../runtime';
  */
 export interface Hotel {
     /**
-     * Name of the hotel
+     * 
      * @type {string}
      * @memberof Hotel
      */
-    name: string;
+    name?: string;
     /**
-     * House No., Street, Road
+     * 
      * @type {string}
      * @memberof Hotel
      */
-    address: string;
+    address?: string;
     /**
-     * District
-     * @type {string}
-     * @memberof Hotel
-     */
-    district: string;
-    /**
-     * province
-     * @type {string}
-     * @memberof Hotel
-     */
-    province: string;
-    /**
-     * 5-digit postal code
-     * @type {string}
-     * @memberof Hotel
-     */
-    postalcode: string;
-    /**
-     * telephone number
+     * 
      * @type {string}
      * @memberof Hotel
      */
     tel?: string;
-    /**
-     * picture
-     * @type {string}
-     * @memberof Hotel
-     */
-    picture: string;
 }
 
 /**
  * Check if a given object implements the Hotel interface.
  */
 export function instanceOfHotel(value: object): value is Hotel {
-    if (!('name' in value) || value['name'] === undefined) return false;
-    if (!('address' in value) || value['address'] === undefined) return false;
-    if (!('district' in value) || value['district'] === undefined) return false;
-    if (!('province' in value) || value['province'] === undefined) return false;
-    if (!('postalcode' in value) || value['postalcode'] === undefined) return false;
-    if (!('picture' in value) || value['picture'] === undefined) return false;
     return true;
 }
 
@@ -86,13 +56,9 @@ export function HotelFromJSONTyped(json: any, ignoreDiscriminator: boolean): Hot
     }
     return {
         
-        'name': json['name'],
-        'address': json['address'],
-        'district': json['district'],
-        'province': json['province'],
-        'postalcode': json['postalcode'],
+        'name': json['name'] == null ? undefined : json['name'],
+        'address': json['address'] == null ? undefined : json['address'],
         'tel': json['tel'] == null ? undefined : json['tel'],
-        'picture': json['picture'],
     };
 }
 
@@ -104,11 +70,7 @@ export function HotelToJSON(value?: Hotel | null): any {
         
         'name': value['name'],
         'address': value['address'],
-        'district': value['district'],
-        'province': value['province'],
-        'postalcode': value['postalcode'],
         'tel': value['tel'],
-        'picture': value['picture'],
     };
 }
 

@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * Library API
- * Hotel Booking API
+ * Hotel Booking and Authentication API
+ * API for managing hotels, bookings, and user authentication
  *
  * The version of the OpenAPI document: 1.0.0
  * 
@@ -15,14 +15,41 @@
 
 import * as runtime from '../runtime';
 import type {
-  Booking,
-  BookingBody,
+  AddBookingRequest,
+  BadRequest400Response,
+  CreateBooking200Response,
+  DeleteBooking200Response,
+  GetBookingById200Response,
+  GetBookings200Response,
+  NotFound404Response,
+  ServerError500Response,
+  Unauthorized401Response,
+  UpdateBooking200Response,
+  UpdateBookingRequest,
 } from '../models/index';
 import {
-    BookingFromJSON,
-    BookingToJSON,
-    BookingBodyFromJSON,
-    BookingBodyToJSON,
+    AddBookingRequestFromJSON,
+    AddBookingRequestToJSON,
+    BadRequest400ResponseFromJSON,
+    BadRequest400ResponseToJSON,
+    CreateBooking200ResponseFromJSON,
+    CreateBooking200ResponseToJSON,
+    DeleteBooking200ResponseFromJSON,
+    DeleteBooking200ResponseToJSON,
+    GetBookingById200ResponseFromJSON,
+    GetBookingById200ResponseToJSON,
+    GetBookings200ResponseFromJSON,
+    GetBookings200ResponseToJSON,
+    NotFound404ResponseFromJSON,
+    NotFound404ResponseToJSON,
+    ServerError500ResponseFromJSON,
+    ServerError500ResponseToJSON,
+    Unauthorized401ResponseFromJSON,
+    Unauthorized401ResponseToJSON,
+    UpdateBooking200ResponseFromJSON,
+    UpdateBooking200ResponseToJSON,
+    UpdateBookingRequestFromJSON,
+    UpdateBookingRequestToJSON,
 } from '../models/index';
 
 export interface BookingsGetRequest {
@@ -39,12 +66,12 @@ export interface BookingsIdGetRequest {
 
 export interface BookingsIdPutRequest {
     id: string;
-    bookingBody: BookingBody;
+    updateBookingRequest: UpdateBookingRequest;
 }
 
 export interface HotelsHotelIdBookingsPostRequest {
     hotelId: string;
-    bookingBody: BookingBody;
+    addBookingRequest: AddBookingRequest;
 }
 
 /**
@@ -53,9 +80,9 @@ export interface HotelsHotelIdBookingsPostRequest {
 export class BookingsApi extends runtime.BaseAPI {
 
     /**
-     * Returns the list of all the bookings
+     * Get all bookings
      */
-    async bookingsGetRaw(requestParameters: BookingsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Booking>>> {
+    async bookingsGetRaw(requestParameters: BookingsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetBookings200Response>> {
         const queryParameters: any = {};
 
         if (requestParameters['hotelId'] != null) {
@@ -64,14 +91,6 @@ export class BookingsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("bearerAuth", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
         const response = await this.request({
             path: `/bookings`,
             method: 'GET',
@@ -79,21 +98,21 @@ export class BookingsApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(BookingFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => GetBookings200ResponseFromJSON(jsonValue));
     }
 
     /**
-     * Returns the list of all the bookings
+     * Get all bookings
      */
-    async bookingsGet(requestParameters: BookingsGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Booking>> {
+    async bookingsGet(requestParameters: BookingsGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetBookings200Response> {
         const response = await this.bookingsGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Delete the booking by id
+     * Delete a booking
      */
-    async bookingsIdDeleteRaw(requestParameters: BookingsIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Booking>> {
+    async bookingsIdDeleteRaw(requestParameters: BookingsIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DeleteBooking200Response>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
@@ -105,14 +124,6 @@ export class BookingsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("bearerAuth", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
         const response = await this.request({
             path: `/bookings/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'DELETE',
@@ -120,21 +131,21 @@ export class BookingsApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => BookingFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => DeleteBooking200ResponseFromJSON(jsonValue));
     }
 
     /**
-     * Delete the booking by id
+     * Delete a booking
      */
-    async bookingsIdDelete(requestParameters: BookingsIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Booking> {
+    async bookingsIdDelete(requestParameters: BookingsIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DeleteBooking200Response> {
         const response = await this.bookingsIdDeleteRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Get the booking by id
+     * Get a single booking by id
      */
-    async bookingsIdGetRaw(requestParameters: BookingsIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Booking>> {
+    async bookingsIdGetRaw(requestParameters: BookingsIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetBookingById200Response>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
@@ -146,14 +157,6 @@ export class BookingsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("bearerAuth", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
         const response = await this.request({
             path: `/bookings/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'GET',
@@ -161,21 +164,21 @@ export class BookingsApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => BookingFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => GetBookingById200ResponseFromJSON(jsonValue));
     }
 
     /**
-     * Get the booking by id
+     * Get a single booking by id
      */
-    async bookingsIdGet(requestParameters: BookingsIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Booking> {
+    async bookingsIdGet(requestParameters: BookingsIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetBookingById200Response> {
         const response = await this.bookingsIdGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Update the booking by id
+     * Update a booking
      */
-    async bookingsIdPutRaw(requestParameters: BookingsIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Booking>> {
+    async bookingsIdPutRaw(requestParameters: BookingsIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UpdateBooking200Response>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
@@ -183,10 +186,10 @@ export class BookingsApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['bookingBody'] == null) {
+        if (requestParameters['updateBookingRequest'] == null) {
             throw new runtime.RequiredError(
-                'bookingBody',
-                'Required parameter "bookingBody" was null or undefined when calling bookingsIdPut().'
+                'updateBookingRequest',
+                'Required parameter "updateBookingRequest" was null or undefined when calling bookingsIdPut().'
             );
         }
 
@@ -196,37 +199,29 @@ export class BookingsApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("bearerAuth", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
         const response = await this.request({
             path: `/bookings/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: BookingBodyToJSON(requestParameters['bookingBody']),
+            body: UpdateBookingRequestToJSON(requestParameters['updateBookingRequest']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => BookingFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => UpdateBooking200ResponseFromJSON(jsonValue));
     }
 
     /**
-     * Update the booking by id
+     * Update a booking
      */
-    async bookingsIdPut(requestParameters: BookingsIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Booking> {
+    async bookingsIdPut(requestParameters: BookingsIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UpdateBooking200Response> {
         const response = await this.bookingsIdPutRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Create a new Booking for the hotel specified by hotel id
+     * Create a booking for a hotel
      */
-    async hotelsHotelIdBookingsPostRaw(requestParameters: HotelsHotelIdBookingsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Booking>> {
+    async hotelsHotelIdBookingsPostRaw(requestParameters: HotelsHotelIdBookingsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CreateBooking200Response>> {
         if (requestParameters['hotelId'] == null) {
             throw new runtime.RequiredError(
                 'hotelId',
@@ -234,10 +229,10 @@ export class BookingsApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['bookingBody'] == null) {
+        if (requestParameters['addBookingRequest'] == null) {
             throw new runtime.RequiredError(
-                'bookingBody',
-                'Required parameter "bookingBody" was null or undefined when calling hotelsHotelIdBookingsPost().'
+                'addBookingRequest',
+                'Required parameter "addBookingRequest" was null or undefined when calling hotelsHotelIdBookingsPost().'
             );
         }
 
@@ -247,29 +242,21 @@ export class BookingsApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("bearerAuth", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
         const response = await this.request({
             path: `/hotels/{hotelId}/bookings`.replace(`{${"hotelId"}}`, encodeURIComponent(String(requestParameters['hotelId']))),
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: BookingBodyToJSON(requestParameters['bookingBody']),
+            body: AddBookingRequestToJSON(requestParameters['addBookingRequest']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => BookingFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => CreateBooking200ResponseFromJSON(jsonValue));
     }
 
     /**
-     * Create a new Booking for the hotel specified by hotel id
+     * Create a booking for a hotel
      */
-    async hotelsHotelIdBookingsPost(requestParameters: HotelsHotelIdBookingsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Booking> {
+    async hotelsHotelIdBookingsPost(requestParameters: HotelsHotelIdBookingsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateBooking200Response> {
         const response = await this.hotelsHotelIdBookingsPostRaw(requestParameters, initOverrides);
         return await response.value();
     }

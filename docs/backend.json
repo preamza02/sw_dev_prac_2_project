@@ -345,10 +345,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Hotel"
-                  }
+                  "$ref": "#/components/schemas/GetHotels200Response"
                 }
               }
             }
@@ -532,6 +529,30 @@
             "format": "date",
             "example": "2023-08-20",
             "description": "Date of creation (default is current date-time)"
+          }
+        }
+      },
+      "GetHotels200Response": {
+        "type": "object",
+        "required": ["success", "count", "pagination", "data"],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "count": {
+            "type": "integer"
+          },
+          "pagination": {
+            "type": "integer"
+          },
+          "data": {
+            "type": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Hotel"
+              }
+            }
           }
         }
       },

@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * Library API
- * Hotel Booking API
+ * Hotel Booking and Authentication API
+ * API for managing hotels, bookings, and user authentication
  *
  * The version of the OpenAPI document: 1.0.0
  * 
@@ -15,22 +15,37 @@
 
 import * as runtime from '../runtime';
 import type {
-  AuthLoginPostRequest,
-  User,
+  AuthResponse,
+  BadRequest400Response,
+  GetMeResponse,
+  LoginUserRequest,
+  LogoutResponse,
+  RegisterUserRequest,
+  Unauthorized401Response,
 } from '../models/index';
 import {
-    AuthLoginPostRequestFromJSON,
-    AuthLoginPostRequestToJSON,
-    UserFromJSON,
-    UserToJSON,
+    AuthResponseFromJSON,
+    AuthResponseToJSON,
+    BadRequest400ResponseFromJSON,
+    BadRequest400ResponseToJSON,
+    GetMeResponseFromJSON,
+    GetMeResponseToJSON,
+    LoginUserRequestFromJSON,
+    LoginUserRequestToJSON,
+    LogoutResponseFromJSON,
+    LogoutResponseToJSON,
+    RegisterUserRequestFromJSON,
+    RegisterUserRequestToJSON,
+    Unauthorized401ResponseFromJSON,
+    Unauthorized401ResponseToJSON,
 } from '../models/index';
 
-export interface AuthLoginPostOperationRequest {
-    authLoginPostRequest: AuthLoginPostRequest;
+export interface AuthLoginPostRequest {
+    loginUserRequest: LoginUserRequest;
 }
 
 export interface AuthRegisterPostRequest {
-    user: User;
+    registerUserRequest: RegisterUserRequest;
 }
 
 /**
@@ -39,13 +54,13 @@ export interface AuthRegisterPostRequest {
 export class UserApi extends runtime.BaseAPI {
 
     /**
-     * Log-in to the system
+     * Log in an existing user
      */
-    async authLoginPostRaw(requestParameters: AuthLoginPostOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters['authLoginPostRequest'] == null) {
+    async authLoginPostRaw(requestParameters: AuthLoginPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AuthResponse>> {
+        if (requestParameters['loginUserRequest'] == null) {
             throw new runtime.RequiredError(
-                'authLoginPostRequest',
-                'Required parameter "authLoginPostRequest" was null or undefined when calling authLoginPost().'
+                'loginUserRequest',
+                'Required parameter "loginUserRequest" was null or undefined when calling authLoginPost().'
             );
         }
 
@@ -60,23 +75,50 @@ export class UserApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: AuthLoginPostRequestToJSON(requestParameters['authLoginPostRequest']),
+            body: LoginUserRequestToJSON(requestParameters['loginUserRequest']),
         }, initOverrides);
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => AuthResponseFromJSON(jsonValue));
     }
 
     /**
-     * Log-in to the system
+     * Log in an existing user
      */
-    async authLoginPost(requestParameters: AuthLoginPostOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.authLoginPostRaw(requestParameters, initOverrides);
+    async authLoginPost(requestParameters: AuthLoginPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AuthResponse> {
+        const response = await this.authLoginPostRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
     /**
-     * Return information about me
+     * Log out the current user
      */
-    async authMeGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<User>> {
+    async authLogoutGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<LogoutResponse>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/auth/logout`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => LogoutResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Log out the current user
+     */
+    async authLogoutGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<LogoutResponse> {
+        const response = await this.authLogoutGetRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Get the current logged-in user
+     */
+    async authMeGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetMeResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -96,25 +138,25 @@ export class UserApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => UserFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => GetMeResponseFromJSON(jsonValue));
     }
 
     /**
-     * Return information about me
+     * Get the current logged-in user
      */
-    async authMeGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<User> {
+    async authMeGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetMeResponse> {
         const response = await this.authMeGetRaw(initOverrides);
         return await response.value();
     }
 
     /**
-     * Create a new user
+     * Register a new user
      */
-    async authRegisterPostRaw(requestParameters: AuthRegisterPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<User>> {
-        if (requestParameters['user'] == null) {
+    async authRegisterPostRaw(requestParameters: AuthRegisterPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AuthResponse>> {
+        if (requestParameters['registerUserRequest'] == null) {
             throw new runtime.RequiredError(
-                'user',
-                'Required parameter "user" was null or undefined when calling authRegisterPost().'
+                'registerUserRequest',
+                'Required parameter "registerUserRequest" was null or undefined when calling authRegisterPost().'
             );
         }
 
@@ -129,16 +171,16 @@ export class UserApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: UserToJSON(requestParameters['user']),
+            body: RegisterUserRequestToJSON(requestParameters['registerUserRequest']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => UserFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => AuthResponseFromJSON(jsonValue));
     }
 
     /**
-     * Create a new user
+     * Register a new user
      */
-    async authRegisterPost(requestParameters: AuthRegisterPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<User> {
+    async authRegisterPost(requestParameters: AuthRegisterPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AuthResponse> {
         const response = await this.authRegisterPostRaw(requestParameters, initOverrides);
         return await response.value();
     }

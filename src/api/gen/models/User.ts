@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * Library API
- * Hotel Booking API
+ * Hotel Booking and Authentication API
+ * API for managing hotels, bookings, and user authentication
  *
  * The version of the OpenAPI document: 1.0.0
  * 
@@ -20,51 +20,29 @@ import { mapValues } from '../runtime';
  */
 export interface User {
     /**
-     * Name of user
+     * 
      * @type {string}
      * @memberof User
      */
-    name: string;
+    name?: string;
     /**
-     * Email of user
+     * 
      * @type {string}
      * @memberof User
      */
-    email: string;
+    email?: string;
     /**
-     * Telephone number of user
+     * 
      * @type {string}
      * @memberof User
      */
-    tel: string;
-    /**
-     * Role of user (admin or user), default is user
-     * @type {string}
-     * @memberof User
-     */
-    role?: string;
-    /**
-     * Password of user
-     * @type {string}
-     * @memberof User
-     */
-    password: string;
-    /**
-     * Date of creation (default is current date-time)
-     * @type {Date}
-     * @memberof User
-     */
-    createdAt?: Date;
+    tel?: string;
 }
 
 /**
  * Check if a given object implements the User interface.
  */
 export function instanceOfUser(value: object): value is User {
-    if (!('name' in value) || value['name'] === undefined) return false;
-    if (!('email' in value) || value['email'] === undefined) return false;
-    if (!('tel' in value) || value['tel'] === undefined) return false;
-    if (!('password' in value) || value['password'] === undefined) return false;
     return true;
 }
 
@@ -78,12 +56,9 @@ export function UserFromJSONTyped(json: any, ignoreDiscriminator: boolean): User
     }
     return {
         
-        'name': json['name'],
-        'email': json['email'],
-        'tel': json['tel'],
-        'role': json['role'] == null ? undefined : json['role'],
-        'password': json['password'],
-        'createdAt': json['createdAt'] == null ? undefined : (new Date(json['createdAt'])),
+        'name': json['name'] == null ? undefined : json['name'],
+        'email': json['email'] == null ? undefined : json['email'],
+        'tel': json['tel'] == null ? undefined : json['tel'],
     };
 }
 
@@ -96,9 +71,6 @@ export function UserToJSON(value?: User | null): any {
         'name': value['name'],
         'email': value['email'],
         'tel': value['tel'],
-        'role': value['role'],
-        'password': value['password'],
-        'createdAt': value['createdAt'] == null ? undefined : ((value['createdAt']).toISOString().substring(0,10)),
     };
 }
 

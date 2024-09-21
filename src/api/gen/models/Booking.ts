@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * Library API
- * Hotel Booking API
+ * Hotel Booking and Authentication API
+ * API for managing hotels, bookings, and user authentication
  *
  * The version of the OpenAPI document: 1.0.0
  * 
@@ -13,6 +13,19 @@
  */
 
 import { mapValues } from '../runtime';
+import type { User } from './User';
+import {
+    UserFromJSON,
+    UserFromJSONTyped,
+    UserToJSON,
+} from './User';
+import type { Hotel } from './Hotel';
+import {
+    HotelFromJSON,
+    HotelFromJSONTyped,
+    HotelToJSON,
+} from './Hotel';
+
 /**
  * 
  * @export
@@ -20,45 +33,41 @@ import { mapValues } from '../runtime';
  */
 export interface Booking {
     /**
-     * Check-In Date
-     * @type {Date}
-     * @memberof Booking
-     */
-    bookingDate: Date;
-    /**
-     * Check-In Date
-     * @type {Date}
-     * @memberof Booking
-     */
-    checkoutDate: Date;
-    /**
-     * ID of the user making reservation
+     * 
      * @type {string}
      * @memberof Booking
      */
-    user: string;
+    id?: string;
     /**
-     * ID of the hotel being reserved
-     * @type {string}
-     * @memberof Booking
-     */
-    hotel: string;
-    /**
-     * Date of creation (default is current date-time)
+     * Booking start date
      * @type {Date}
      * @memberof Booking
      */
-    createdAt?: Date;
+    bookingDate?: Date;
+    /**
+     * Booking end date
+     * @type {Date}
+     * @memberof Booking
+     */
+    checkoutDate?: Date;
+    /**
+     * 
+     * @type {Hotel}
+     * @memberof Booking
+     */
+    hotel?: Hotel;
+    /**
+     * 
+     * @type {User}
+     * @memberof Booking
+     */
+    user?: User;
 }
 
 /**
  * Check if a given object implements the Booking interface.
  */
 export function instanceOfBooking(value: object): value is Booking {
-    if (!('bookingDate' in value) || value['bookingDate'] === undefined) return false;
-    if (!('checkoutDate' in value) || value['checkoutDate'] === undefined) return false;
-    if (!('user' in value) || value['user'] === undefined) return false;
-    if (!('hotel' in value) || value['hotel'] === undefined) return false;
     return true;
 }
 
@@ -72,11 +81,11 @@ export function BookingFromJSONTyped(json: any, ignoreDiscriminator: boolean): B
     }
     return {
         
-        'bookingDate': (new Date(json['bookingDate'])),
-        'checkoutDate': (new Date(json['checkoutDate'])),
-        'user': json['user'],
-        'hotel': json['hotel'],
-        'createdAt': json['createdAt'] == null ? undefined : (new Date(json['createdAt'])),
+        'id': json['_id'] == null ? undefined : json['_id'],
+        'bookingDate': json['bookingDate'] == null ? undefined : (new Date(json['bookingDate'])),
+        'checkoutDate': json['checkoutDate'] == null ? undefined : (new Date(json['checkoutDate'])),
+        'hotel': json['hotel'] == null ? undefined : HotelFromJSON(json['hotel']),
+        'user': json['user'] == null ? undefined : UserFromJSON(json['user']),
     };
 }
 
@@ -86,11 +95,11 @@ export function BookingToJSON(value?: Booking | null): any {
     }
     return {
         
-        'bookingDate': ((value['bookingDate']).toISOString().substring(0,10)),
-        'checkoutDate': ((value['checkoutDate']).toISOString().substring(0,10)),
-        'user': value['user'],
-        'hotel': value['hotel'],
-        'createdAt': value['createdAt'] == null ? undefined : ((value['createdAt']).toISOString().substring(0,10)),
+        '_id': value['id'],
+        'bookingDate': value['bookingDate'] == null ? undefined : ((value['bookingDate']).toISOString().substring(0,10)),
+        'checkoutDate': value['checkoutDate'] == null ? undefined : ((value['checkoutDate']).toISOString().substring(0,10)),
+        'hotel': HotelToJSON(value['hotel']),
+        'user': UserToJSON(value['user']),
     };
 }
 
