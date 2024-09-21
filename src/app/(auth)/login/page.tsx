@@ -2,8 +2,11 @@
 import AuthContainer from "../_component/authContainer";
 import LinkButton from "@/app/_components/linkButton";
 import AuthFormElement from "../_component/authFormElement";
+import { HotelsApi } from "@/api/gen";
 import { useState } from "react";
 export default function LoginHomePage() {
+    const hotelApi = new HotelsApi()
+    hotelApi.hotelsGet().then(value => console.log(value))
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
     return (

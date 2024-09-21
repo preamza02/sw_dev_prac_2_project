@@ -1,0 +1,13 @@
+.openapi-generator-ignore
+apis/BookingsApi.ts
+apis/HotelsApi.ts
+apis/UserApi.ts
+apis/index.ts
+index.ts
+models/AuthLoginPostRequest.ts
+models/Booking.ts
+models/BookingBody.ts
+models/Hotel.ts
+models/User.ts
+models/index.ts
+runtime.ts
