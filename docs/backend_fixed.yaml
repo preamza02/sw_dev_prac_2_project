@@ -1,415 +1,415 @@
-openapi: "3.0.0"
+openapi: '3.0.0'
 info:
-  title: "Hotel Booking and Authentication API"
-  version: "1.0.0"
-  description: "API for managing hotels, bookings, and user authentication"
+  title: 'Hotel Booking and Authentication API'
+  version: '1.0.0'
+  description: 'API for managing hotels, bookings, and user authentication'
 servers:
-  - url: "http://localhost:5000/api/v1"
+  - url: 'http://localhost:5001/api/v1'
 
 paths:
   /auth/register:
     post:
-      summary: "Register a new user"
+      summary: 'Register a new user'
       tags:
-        - "User"
+        - 'User'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/RegisterUserRequest"
+              $ref: '#/components/schemas/RegisterUserRequest'
       responses:
-        "200":
-          description: "User registered successfully"
+        '200':
+          description: 'User registered successfully'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AuthResponse"
-        "400":
-          description: "Bad request"
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: 'Bad request'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BadRequest400Response"
+                $ref: '#/components/schemas/BadRequest400Response'
 
   /auth/login:
     post:
-      summary: "Log in an existing user"
+      summary: 'Log in an existing user'
       tags:
-        - "User"
+        - 'User'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/LoginUserRequest"
+              $ref: '#/components/schemas/LoginUserRequest'
       responses:
-        "200":
-          description: "User logged in successfully"
+        '200':
+          description: 'User logged in successfully'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AuthResponse"
-        "400":
-          description: "Invalid credentials"
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: 'Invalid credentials'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BadRequest400Response"
-        "401":
-          description: "Unauthorized or invalid credentials"
+                $ref: '#/components/schemas/BadRequest400Response'
+        '401':
+          description: 'Unauthorized or invalid credentials'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Unauthorized401Response"
+                $ref: '#/components/schemas/Unauthorized401Response'
 
   /auth/me:
     get:
-      summary: "Get the current logged-in user"
+      summary: 'Get the current logged-in user'
       tags:
-        - "User"
+        - 'User'
       security:
         - bearerAuth: []
       responses:
-        "200":
-          description: "User information"
+        '200':
+          description: 'User information'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetMeResponse"
-        "401":
-          description: "Unauthorized"
+                $ref: '#/components/schemas/GetMeResponse'
+        '401':
+          description: 'Unauthorized'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Unauthorized401Response"
+                $ref: '#/components/schemas/Unauthorized401Response'
 
   /auth/logout:
     get:
-      summary: "Log out the current user"
+      summary: 'Log out the current user'
       tags:
-        - "User"
+        - 'User'
       responses:
-        "200":
-          description: "User logged out successfully"
+        '200':
+          description: 'User logged out successfully'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/LogoutResponse"
+                $ref: '#/components/schemas/LogoutResponse'
 
   /hotels:
     get:
-      summary: "Get all hotels"
+      summary: 'Get all hotels'
       tags:
-        - "Hotels"
+        - 'Hotels'
       parameters:
-        - in: "query"
-          name: "select"
+        - in: 'query'
+          name: 'select'
           schema:
-            type: "string"
-          description: "Fields to include in the response"
-        - in: "query"
-          name: "sort"
+            type: 'string'
+          description: 'Fields to include in the response'
+        - in: 'query'
+          name: 'sort'
           schema:
-            type: "string"
-          description: "Sort by field"
-        - in: "query"
-          name: "page"
+            type: 'string'
+          description: 'Sort by field'
+        - in: 'query'
+          name: 'page'
           schema:
-            type: "integer"
-          description: "Page number for pagination"
-        - in: "query"
-          name: "limit"
+            type: 'integer'
+          description: 'Page number for pagination'
+        - in: 'query'
+          name: 'limit'
           schema:
-            type: "integer"
-          description: "Number of results per page"
+            type: 'integer'
+          description: 'Number of results per page'
       responses:
-        "200":
-          description: "A list of hotels with pagination"
+        '200':
+          description: 'A list of hotels with pagination'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetHotels200Response"
-        "400":
-          description: "Bad request or error"
+                $ref: '#/components/schemas/GetHotels200Response'
+        '400':
+          description: 'Bad request or error'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BadRequest400Response"
+                $ref: '#/components/schemas/BadRequest400Response'
     post:
-      summary: "Create a new hotel"
+      summary: 'Create a new hotel'
       tags:
-        - "Hotels"
+        - 'Hotels'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Hotel"
+              $ref: '#/components/schemas/Hotel'
       responses:
-        "201":
-          description: "The hotel was successfully created"
+        '201':
+          description: 'The hotel was successfully created'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CreateHotel201Response"
-        "400":
-          description: "Bad request or validation error"
+                $ref: '#/components/schemas/CreateHotel201Response'
+        '400':
+          description: 'Bad request or validation error'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BadRequest400Response"
+                $ref: '#/components/schemas/BadRequest400Response'
 
   /hotels/{id}:
     get:
-      summary: "Get the hotel by id"
+      summary: 'Get the hotel by id'
       tags:
-        - "Hotels"
+        - 'Hotels'
       parameters:
-        - in: "path"
-          name: "id"
+        - in: 'path'
+          name: 'id'
           schema:
-            type: "string"
+            type: 'string'
           required: true
-          description: "The hotel id"
+          description: 'The hotel id'
       responses:
-        "200":
-          description: "The hotel description by id"
+        '200':
+          description: 'The hotel description by id'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetHotelById200Response"
-        "400":
-          description: "Hotel not found or bad request"
+                $ref: '#/components/schemas/GetHotelById200Response'
+        '400':
+          description: 'Hotel not found or bad request'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BadRequest400Response"
+                $ref: '#/components/schemas/BadRequest400Response'
     put:
-      summary: "Update a single hotel"
+      summary: 'Update a single hotel'
       tags:
-        - "Hotels"
+        - 'Hotels'
       parameters:
-        - in: "path"
-          name: "id"
+        - in: 'path'
+          name: 'id'
           schema:
-            type: "string"
+            type: 'string'
           required: true
-          description: "The hotel id"
+          description: 'The hotel id'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Hotel"
+              $ref: '#/components/schemas/Hotel'
       responses:
-        "200":
-          description: "The hotel was successfully updated"
+        '200':
+          description: 'The hotel was successfully updated'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UpdateHotel200Response"
-        "400":
-          description: "Hotel not found or bad request"
+                $ref: '#/components/schemas/UpdateHotel200Response'
+        '400':
+          description: 'Hotel not found or bad request'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BadRequest400Response"
+                $ref: '#/components/schemas/BadRequest400Response'
     delete:
-      summary: "Delete a single hotel"
+      summary: 'Delete a single hotel'
       tags:
-        - "Hotels"
+        - 'Hotels'
       parameters:
-        - in: "path"
-          name: "id"
+        - in: 'path'
+          name: 'id'
           schema:
-            type: "string"
+            type: 'string'
           required: true
-          description: "The hotel id"
+          description: 'The hotel id'
       responses:
-        "200":
-          description: "The hotel was successfully deleted"
+        '200':
+          description: 'The hotel was successfully deleted'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DeleteHotel200Response"
-        "400":
-          description: "Hotel not found or bad request"
+                $ref: '#/components/schemas/DeleteHotel200Response'
+        '400':
+          description: 'Hotel not found or bad request'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BadRequest400Response"
+                $ref: '#/components/schemas/BadRequest400Response'
 
   /bookings:
     get:
-      summary: "Get all bookings"
+      summary: 'Get all bookings'
       tags:
-        - "Bookings"
+        - 'Bookings'
       parameters:
-        - in: "query"
-          name: "hotelId"
+        - in: 'query'
+          name: 'hotelId'
           schema:
-            type: "string"
-          description: "Filter bookings by hotel id"
+            type: 'string'
+          description: 'Filter bookings by hotel id'
       responses:
-        "200":
-          description: "A list of bookings"
+        '200':
+          description: 'A list of bookings'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetBookings200Response"
-        "500":
-          description: "Server error"
+                $ref: '#/components/schemas/GetBookings200Response'
+        '500':
+          description: 'Server error'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ServerError500Response"
+                $ref: '#/components/schemas/ServerError500Response'
 
   /bookings/{id}:
     get:
-      summary: "Get a single booking by id"
+      summary: 'Get a single booking by id'
       tags:
-        - "Bookings"
+        - 'Bookings'
       parameters:
-        - in: "path"
-          name: "id"
+        - in: 'path'
+          name: 'id'
           schema:
-            type: "string"
+            type: 'string'
           required: true
-          description: "The booking id"
+          description: 'The booking id'
       responses:
-        "200":
-          description: "Booking details"
+        '200':
+          description: 'Booking details'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GetBookingById200Response"
-        "404":
-          description: "Booking not found"
+                $ref: '#/components/schemas/GetBookingById200Response'
+        '404':
+          description: 'Booking not found'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/NotFound404Response"
-        "401":
-          description: "Unauthorized access"
+                $ref: '#/components/schemas/NotFound404Response'
+        '401':
+          description: 'Unauthorized access'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Unauthorized401Response"
+                $ref: '#/components/schemas/Unauthorized401Response'
     put:
-      summary: "Update a booking"
+      summary: 'Update a booking'
       tags:
-        - "Bookings"
+        - 'Bookings'
       parameters:
-        - in: "path"
-          name: "id"
+        - in: 'path'
+          name: 'id'
           schema:
-            type: "string"
+            type: 'string'
           required: true
-          description: "The booking id"
+          description: 'The booking id'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UpdateBookingRequest"
+              $ref: '#/components/schemas/UpdateBookingRequest'
       responses:
-        "200":
-          description: "Booking updated"
+        '200':
+          description: 'Booking updated'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UpdateBooking200Response"
-        "400":
-          description: "Invalid booking data"
+                $ref: '#/components/schemas/UpdateBooking200Response'
+        '400':
+          description: 'Invalid booking data'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BadRequest400Response"
-        "404":
-          description: "Booking not found"
+                $ref: '#/components/schemas/BadRequest400Response'
+        '404':
+          description: 'Booking not found'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/NotFound404Response"
-        "500":
-          description: "Cannot update booking"
+                $ref: '#/components/schemas/NotFound404Response'
+        '500':
+          description: 'Cannot update booking'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ServerError500Response"
+                $ref: '#/components/schemas/ServerError500Response'
     delete:
-      summary: "Delete a booking"
+      summary: 'Delete a booking'
       tags:
-        - "Bookings"
+        - 'Bookings'
       parameters:
-        - in: "path"
-          name: "id"
+        - in: 'path'
+          name: 'id'
           schema:
-            type: "string"
+            type: 'string'
           required: true
-          description: "The booking id"
+          description: 'The booking id'
       responses:
-        "200":
-          description: "Booking deleted"
+        '200':
+          description: 'Booking deleted'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DeleteBooking200Response"
-        "404":
-          description: "Booking not found"
+                $ref: '#/components/schemas/DeleteBooking200Response'
+        '404':
+          description: 'Booking not found'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/NotFound404Response"
-        "500":
-          description: "Cannot delete booking"
+                $ref: '#/components/schemas/NotFound404Response'
+        '500':
+          description: 'Cannot delete booking'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ServerError500Response"
+                $ref: '#/components/schemas/ServerError500Response'
 
   /hotels/{hotelId}/bookings:
     post:
-      summary: "Create a booking for a hotel"
+      summary: 'Create a booking for a hotel'
       tags:
-        - "Bookings"
+        - 'Bookings'
       parameters:
-        - in: "path"
-          name: "hotelId"
+        - in: 'path'
+          name: 'hotelId'
           schema:
-            type: "string"
+            type: 'string'
           required: true
-          description: "The hotel id"
+          description: 'The hotel id'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/AddBookingRequest"
+              $ref: '#/components/schemas/AddBookingRequest'
       responses:
-        "200":
-          description: "Booking created"
+        '200':
+          description: 'Booking created'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CreateBooking200Response"
-        "400":
-          description: "Invalid booking data"
+                $ref: '#/components/schemas/CreateBooking200Response'
+        '400':
+          description: 'Invalid booking data'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BadRequest400Response"
-        "500":
-          description: "Cannot create booking"
+                $ref: '#/components/schemas/BadRequest400Response'
+        '500':
+          description: 'Cannot create booking'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ServerError500Response"
+                $ref: '#/components/schemas/ServerError500Response'
 components:
   schemas:
     RegisterUserRequest:
-      type: "object"
+      type: 'object'
       required:
         - name
         - email
@@ -417,75 +417,75 @@ components:
         - password
       properties:
         name:
-          type: "string"
+          type: 'string'
           description: "The user's name"
         email:
-          type: "string"
-          format: "email"
+          type: 'string'
+          format: 'email'
           description: "The user's email address"
         tel:
-          type: "string"
+          type: 'string'
           description: "The user's telephone number"
         password:
-          type: "string"
-          format: "password"
+          type: 'string'
+          format: 'password'
           description: "The user's password"
         role:
-          type: "string"
+          type: 'string'
           description: "The user's role (admin/user)"
 
     LoginUserRequest:
-      type: "object"
+      type: 'object'
       required:
         - email
         - password
       properties:
         email:
-          type: "string"
-          format: "email"
+          type: 'string'
+          format: 'email'
           description: "The user's email address"
         password:
-          type: "string"
-          format: "password"
+          type: 'string'
+          format: 'password'
           description: "The user's password"
 
     AuthResponse:
-      type: "object"
+      type: 'object'
       properties:
         success:
-          type: "boolean"
+          type: 'boolean'
         _id:
-          type: "string"
+          type: 'string'
           description: "User's ID"
         name:
-          type: "string"
+          type: 'string'
           description: "User's name"
         email:
-          type: "string"
+          type: 'string'
           description: "User's email address"
         token:
-          type: "string"
-          description: "JWT token for the user"
+          type: 'string'
+          description: 'JWT token for the user'
 
     GetMeResponse:
-      type: "object"
+      type: 'object'
       properties:
         success:
-          type: "boolean"
+          type: 'boolean'
         data:
-          $ref: "#/components/schemas/User"
+          $ref: '#/components/schemas/User'
 
     LogoutResponse:
-      type: "object"
+      type: 'object'
       properties:
         success:
-          type: "boolean"
+          type: 'boolean'
         data:
-          type: "object"
+          type: 'object'
           example: {}
 
     GetHotels200Response:
-      type: "object"
+      type: 'object'
       required:
         - success
         - count
@@ -493,230 +493,230 @@ components:
         - data
       properties:
         success:
-          type: "boolean"
+          type: 'boolean'
           example: true
         count:
-          type: "integer"
+          type: 'integer'
         pagination:
-          type: "object"
+          type: 'object'
           properties:
             next:
-              type: "object"
+              type: 'object'
               properties:
                 page:
-                  type: "integer"
+                  type: 'integer'
                 limit:
-                  type: "integer"
+                  type: 'integer'
             prev:
-              type: "object"
+              type: 'object'
               properties:
                 page:
-                  type: "integer"
+                  type: 'integer'
                 limit:
-                  type: "integer"
+                  type: 'integer'
         data:
-          type: "array"
+          type: 'array'
           items:
-            $ref: "#/components/schemas/Hotel"
+            $ref: '#/components/schemas/Hotel'
 
     GetHotelById200Response:
-      type: "object"
+      type: 'object'
       required:
         - success
         - data
       properties:
         success:
-          type: "boolean"
+          type: 'boolean'
           example: true
         data:
-          $ref: "#/components/schemas/Hotel"
+          $ref: '#/components/schemas/Hotel'
 
     CreateHotel201Response:
-      type: "object"
+      type: 'object'
       required:
         - success
         - data
       properties:
         success:
-          type: "boolean"
+          type: 'boolean'
           example: true
         data:
-          $ref: "#/components/schemas/Hotel"
+          $ref: '#/components/schemas/Hotel'
 
     UpdateHotel200Response:
-      type: "object"
+      type: 'object'
       required:
         - success
         - data
       properties:
         success:
-          type: "boolean"
+          type: 'boolean'
           example: true
         data:
-          $ref: "#/components/schemas/Hotel"
+          $ref: '#/components/schemas/Hotel'
 
     DeleteHotel200Response:
-      type: "object"
+      type: 'object'
       required:
         - success
         - data
       properties:
         success:
-          type: "boolean"
+          type: 'boolean'
           example: true
         data:
-          type: "object"
-          description: "An empty object as the hotel was deleted"
+          type: 'object'
+          description: 'An empty object as the hotel was deleted'
           example: {}
 
     GetBookings200Response:
-      type: "object"
+      type: 'object'
       properties:
         success:
-          type: "boolean"
+          type: 'boolean'
         count:
-          type: "integer"
+          type: 'integer'
         data:
-          type: "array"
+          type: 'array'
           items:
-            $ref: "#/components/schemas/Booking"
+            $ref: '#/components/schemas/Booking'
 
     GetBookingById200Response:
-      type: "object"
+      type: 'object'
       properties:
         success:
-          type: "boolean"
+          type: 'boolean'
         data:
-          $ref: "#/components/schemas/Booking"
+          $ref: '#/components/schemas/Booking'
 
     CreateBooking200Response:
-      type: "object"
+      type: 'object'
       properties:
         success:
-          type: "boolean"
+          type: 'boolean'
         data:
-          $ref: "#/components/schemas/Booking"
+          $ref: '#/components/schemas/Booking'
 
     UpdateBooking200Response:
-      type: "object"
+      type: 'object'
       properties:
         success:
-          type: "boolean"
+          type: 'boolean'
         data:
-          $ref: "#/components/schemas/Booking"
+          $ref: '#/components/schemas/Booking'
 
     AddBookingRequest:
-      type: "object"
+      type: 'object'
       properties:
         bookingDate:
-          type: "string"
-          format: "date"
+          type: 'string'
+          format: 'date'
         checkoutDate:
-          type: "string"
-          format: "date"
+          type: 'string'
+          format: 'date'
 
     UpdateBookingRequest:
-      type: "object"
+      type: 'object'
       properties:
         bookingDate:
-          type: "string"
-          format: "date"
+          type: 'string'
+          format: 'date'
         checkoutDate:
-          type: "string"
-          format: "date"
+          type: 'string'
+          format: 'date'
 
     DeleteBooking200Response:
-      type: "object"
+      type: 'object'
       properties:
         success:
-          type: "boolean"
+          type: 'boolean'
         data:
-          type: "object"
+          type: 'object'
           example: {}
 
     BadRequest400Response:
-      type: "object"
+      type: 'object'
       required:
         - success
       properties:
         success:
-          type: "boolean"
+          type: 'boolean'
           example: false
         message:
-          type: "string"
-          example: "Error message describing the issue"
+          type: 'string'
+          example: 'Error message describing the issue'
 
     Unauthorized401Response:
-      type: "object"
+      type: 'object'
       properties:
         success:
-          type: "boolean"
+          type: 'boolean'
         message:
-          type: "string"
+          type: 'string'
 
     NotFound404Response:
-      type: "object"
+      type: 'object'
       properties:
         success:
-          type: "boolean"
+          type: 'boolean'
         message:
-          type: "string"
+          type: 'string'
 
     ServerError500Response:
-      type: "object"
+      type: 'object'
       properties:
         success:
-          type: "boolean"
+          type: 'boolean'
         message:
-          type: "string"
+          type: 'string'
 
     Booking:
-      type: "object"
+      type: 'object'
       properties:
         _id:
-          type: "string"
+          type: 'string'
         bookingDate:
-          type: "string"
-          format: "date"
-          description: "Booking start date"
+          type: 'string'
+          format: 'date'
+          description: 'Booking start date'
         checkoutDate:
-          type: "string"
-          format: "date"
-          description: "Booking end date"
+          type: 'string'
+          format: 'date'
+          description: 'Booking end date'
         hotel:
-          $ref: "#/components/schemas/Hotel"
+          $ref: '#/components/schemas/Hotel'
         user:
-          $ref: "#/components/schemas/User"
+          $ref: '#/components/schemas/User'
 
     User:
-      type: "object"
+      type: 'object'
       properties:
         name:
-          type: "string"
+          type: 'string'
         email:
-          type: "string"
+          type: 'string'
         tel:
-          type: "string"
+          type: 'string'
 
     Hotel:
-      type: "object"
+      type: 'object'
       properties:
         name:
-          type: "string"
+          type: 'string'
         address:
-          type: "string"
+          type: 'string'
         tel:
-          type: "string"
+          type: 'string'
   securitySchemes:
     bearerAuth:
-      type: "http"
-      scheme: "bearer"
-      bearerFormat: "JWT"
+      type: 'http'
+      scheme: 'bearer'
+      bearerFormat: 'JWT'
 
 tags:
-  - name: "User"
-    description: "The user API"
-  - name: "Bookings"
-    description: "The booking managing API"
-  - name: "Hotels"
-    description: "The hotels managing API"
+  - name: 'User'
+    description: 'The user API'
+  - name: 'Bookings'
+    description: 'The booking managing API'
+  - name: 'Hotels'
+    description: 'The hotels managing API'

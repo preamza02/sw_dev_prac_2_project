@@ -1,6 +1,3 @@
 export default function MainHomePage() {
-
-  return (
-    <div>5555</div>
-  );
+  return <div>5555</div>;
 }

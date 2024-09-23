@@ -1,11 +1,7 @@
-'use client'
+'use client';
 
-import React from "react";
+import React from 'react';
 
 export default function ButtonContainer({ children }: { children: React.ReactNode }) {
-    return (
-        <button className="py-[12px] px-[24px] w-full h-full">
-            {children}
-        </button>
-    )
+  return <button className="h-full w-full px-[24px] py-[12px]">{children}</button>;
 }
