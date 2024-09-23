@@ -2,7 +2,7 @@
 
 > This project is the final project of course Software Development Practice 2 (frontend development) 🌟
 
-Resources 
+Resources
 
 [![Figma](https://img.shields.io/badge/Figma-UI_Design-blue?style=for-the-badge&logo=figma)](https://www.figma.com/design/FZyZXHs2ts06VutHPVeagU/Untitled?node-id=0-1&t=69ITgeQTQ9WceOAI-1)
 [![Google Drive](https://img.shields.io/badge/Google%20Drive-Project_requirement-blue?style=for-the-badge&logo=google-drive)](https://drive.google.com/file/d/16gc9T8-wouZ2o4D7EEoZX9JGqG1o0TNM/view?usp=drive_link)
