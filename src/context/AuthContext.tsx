@@ -7,8 +7,10 @@ import { getCookie } from 'cookies-next';
 interface TAuthContext {
   currentUser: User | null;
   isLogin: boolean;
+  isAdmin: boolean;
   setCurrentUser: (currentEntity: User | null) => void;
   setIsLogin: (isLogin: boolean) => void;
+  setIsAdmin: (isAdmin: boolean) => void;
 }
 
 export const AuthContext = createContext<TAuthContext>({
@@ -16,6 +18,8 @@ export const AuthContext = createContext<TAuthContext>({
   setCurrentUser: () => {},
   isLogin: false,
   setIsLogin: () => {},
+  isAdmin: false,
+  setIsAdmin: () => {},
 });
 
 interface Props {
@@ -25,6 +29,7 @@ interface Props {
 export const AuthProvider = ({ children }: Props) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLogin, setIsLogin] = useState<boolean>(false);
+  const [isAdmin, setIsAdmin] = useState<boolean>(true);
   const userApi = new UserApi();
 
   useEffect(() => {
@@ -42,7 +47,9 @@ export const AuthProvider = ({ children }: Props) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ currentUser, setCurrentUser, isLogin, setIsLogin }}>
+    <AuthContext.Provider
+      value={{ currentUser, setCurrentUser, isLogin, setIsLogin, isAdmin, setIsAdmin }}
+    >
       {children}
     </AuthContext.Provider>
   );

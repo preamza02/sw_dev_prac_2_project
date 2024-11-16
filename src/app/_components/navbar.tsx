@@ -40,17 +40,17 @@ export default function NavBar() {
         {isLogin ? (
           <>
             {/* Display the first letter of the user's name */}
-            <div className="flex h-[45px] w-[45px] items-center justify-center rounded-full bg-gray-600">
-              <h1 className="text-xl font-bold">{currentUser?.name?.charAt(0).toUpperCase()}</h1>
-            </div>
-
-            {/* Logout as a styled link */}
             <button
               onClick={handleLogout}
               className="text-sm font-medium text-black underline hover:text-gray-300"
             >
               Logout
             </button>
+            <div className="flex h-[45px] w-[45px] items-center justify-center rounded-full bg-gray-600">
+              <h1 className="text-xl font-bold">{currentUser?.name?.charAt(0).toUpperCase()}</h1>
+            </div>
+
+            {/* Logout as a styled link */}
           </>
         ) : (
           // Login link

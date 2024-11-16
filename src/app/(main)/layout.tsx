@@ -17,18 +17,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
-        <AuthProvider>
+      <AuthProvider>
+        <body className="h-screen max-h-screen overflow-hidden">
           <NavBar></NavBar>
-          <div>
-            <SearchBar></SearchBar>
-            <div className="flex w-full flex-row">
-              <div className="w-1/4">555</div>
-              <div className="w-3/4 pr-20">{children}</div>
-            </div>
+          <SearchBar></SearchBar>
+          <div className="flex w-full flex-row">
+            <div className="my-5 w-1/4 border-r border-black pr-4">555</div>
+            <div className="w-3/4 pl-4">{children}</div>
           </div>
-        </AuthProvider>
-      </body>
+        </body>
+      </AuthProvider>
     </html>
   );
 }

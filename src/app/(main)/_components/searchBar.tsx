@@ -1,26 +1,13 @@
 export default function SearchBar() {
   return (
-    <div className="mb-6 flex h-[70px] items-center justify-center space-x-4 bg-[#20274D] p-10">
-      <div className="flex items-center rounded-lg bg-white px-2 py-1 text-black">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6 text-gray-400"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 16a10 10 0 1116.39 8.61M4.05 19.05A7 7 0 1017 17m-1-5v1"
-          />
-        </svg>
+    <div className="flex h-[70px] items-center justify-center space-x-4 bg-[#20274D] p-10">
+      <div className="flex h-[50px] items-center rounded-lg bg-white px-2 py-1 text-black">
+        <img className="w-8" src="/icon/search.svg" alt="" />
         <input type="text" placeholder="Search...." className="bg-transparent px-2 outline-none" />
       </div>
       <div className="flex items-center space-x-4 rounded-xl bg-white px-1">
         <div className="flex flex-col">
-          <label htmlFor="departure-date" className="text-sm font-medium text-gray-700">
+          <label htmlFor="departure-date" className="text-center text-sm font-medium text-gray-700">
             Departure Date
           </label>
           <input
@@ -31,7 +18,7 @@ export default function SearchBar() {
         </div>
 
         <div className="flex flex-col">
-          <label htmlFor="arrival-date" className="text-sm font-medium text-gray-700">
+          <label htmlFor="arrival-date" className="text-center text-sm font-medium text-gray-700">
             Arrival Date
           </label>
           <input
