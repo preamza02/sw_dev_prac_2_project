@@ -4,6 +4,9 @@ import Link from 'next/link';
 import { useContext } from 'react';
 import { AuthContext } from '@/context/AuthContext';
 import { Hotel } from '@/api/interfaces';
+import createBooking from '@/api/booking/createBooking';
+import { HotelsContext } from '@/context/HotelContext';
+import { getCookie } from 'cookies-next';
 
 interface HotelsCardProps {
   hotel: Hotel; // Define the prop to accept the hotel data
@@ -11,6 +14,7 @@ interface HotelsCardProps {
 
 export default function HotelsCard({ hotel }: HotelsCardProps) {
   const { currentUser } = useContext(AuthContext);
+  const { checkInDate, checkOutDate } = useContext(HotelsContext);
   const imageUrl = hotel.picture ? hotel.picture : '/img/test_hotels.png';
   return (
     <div className="flex h-[150px] w-full flex-col overflow-hidden rounded-2xl border-2 shadow">
@@ -26,6 +30,8 @@ export default function HotelsCard({ hotel }: HotelsCardProps) {
             alt="hotel"
             fill
             style={{ objectFit: 'cover' }}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" // Add appropriate sizes
+            priority={true}
           />
         </div>
         <div className="flex h-full w-3/4 flex-row px-10">
@@ -37,9 +43,29 @@ export default function HotelsCard({ hotel }: HotelsCardProps) {
             <p className="text-blue-600">Tel : {hotel.tel}</p>
           </div>
           <div className="m-auto w-fit">
-            <button className="rounded bg-green-500 px-6 py-2 text-white">Book</button>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                if (checkOutDate <= checkInDate) {
+                  alert('Check out date must be later than check in date');
+                  return;
+                }
+                const token = getCookie('my_token');
+                if (!token) {
+                  return;
+                }
+                createBooking(token as string, hotel.id as string, {
+                  bookingDate: checkInDate.toISOString().split('T')[0],
+                  checkoutDate: checkOutDate.toISOString().split('T')[0],
+                  createdAt: new Date().toISOString().split('T')[0],
+                });
+              }}
+              className="rounded bg-green-500 px-6 py-2 text-white"
+            >
+              Book
+            </button>
             {currentUser?.role === 'admin' && (
-              <Link href="/" className="flex h-full items-center justify-end">
+              <Link href={`/${hotel.id}/edit`} className="flex h-full items-center justify-end">
                 <p className="underline">Edit</p>
               </Link>
             )}

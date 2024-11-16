@@ -27,15 +27,22 @@ export const AuthProvider = ({ children }: Props) => {
   const [isLogin, setIsLogin] = useState<boolean>(false);
 
   useEffect(() => {
+    if (getCookie('my_token')) {
+      setIsLogin(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isLogin) {
+      return;
+    }
     getUserProfile(getCookie('my_token') as string).then((Response) => {
       if ('message' in Response) {
-        setIsLogin(false);
         return;
       }
       setCurrentUser((Response as UserResponse).data);
-      setIsLogin(true);
     });
-  }, []);
+  }, [isLogin]);
 
   return (
     <AuthContext.Provider value={{ currentUser, setCurrentUser, isLogin, setIsLogin }}>

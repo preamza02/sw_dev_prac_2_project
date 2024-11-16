@@ -27,12 +27,12 @@ export default function NavBar() {
       {/* Logo */}
       <Link href="/" className="flex h-full items-center">
         <Image
-          src="/logo.png"
+          src="/setCurrentHotelList"
           height={90}
           width={300}
           style={{ width: 'auto', height: '100%' }}
           alt="logo"
-          priority={true}
+          priority
         />
       </Link>
 

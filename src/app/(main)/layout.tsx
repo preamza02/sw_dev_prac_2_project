@@ -6,6 +6,7 @@ import { AuthProvider } from '@/context/AuthContext';
 import { HotelsProvider } from '@/context/HotelContext';
 import SearchBar from './_components/searchBar';
 import Line from '../_components/line';
+import BookingSection from './_components/bookingSection';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -25,7 +26,9 @@ export default function RootLayout({
             <NavBar></NavBar>
             <SearchBar></SearchBar>
             <div style={{ height: 'calc(100vh - 140px)' }} className="flex w-full flex-row">
-              <div className="w-1/4 pr-4">555</div>
+              <div className="w-1/4 pr-4">
+                <BookingSection />
+              </div>
               <Line />
               <div className="flex w-full flex-col pl-4">{children}</div>
             </div>

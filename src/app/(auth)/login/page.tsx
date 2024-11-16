@@ -36,12 +36,6 @@ export default function LoginHomePage() {
       await setCookie('my_token', (response as LoginResponse).token, {
         maxAge: 60 * 60 * 24 * 30, // 30 days
       });
-
-      const user = await getUserProfile((response as LoginResponse).token);
-      if ('message' in user) {
-        throw new Error('Failed to fetch user profile');
-      }
-      setCurrentUser(user.data);
       setIsLogin(true);
 
       // Navigate to root path after login

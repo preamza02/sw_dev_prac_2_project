@@ -1,26 +1,37 @@
 'use client';
 import { ReactNode, createContext, useEffect, useState } from 'react';
-import { Hotel } from '@/api/interfaces';
-import getHotels from '@/api/hotel/getHospital.api';
+import { Hotel, Booking } from '@/api/interfaces';
+import getHotels from '@/api/hotel/getHotels.api';
+import getBooking from '@/api/booking/getBooking';
+import { getCookie } from 'cookies-next';
+import searchHandle from '@/utils/searchHandle';
 
 interface THotelContext {
-  currentBookingList: Hotel[];
-  currentHospitalList: Hotel[];
+  searchQuery: string;
+  currentBookingList: Booking[];
+  allHotelList: Hotel[];
+  currentHotelList: Hotel[];
   checkInDate: Date;
   checkOutDate: Date;
-  setCurrentBookingList: (currentEntity: Hotel[]) => void;
-  setCurrentHospitalList: (currentEntity: Hotel[]) => void;
+  setSearchQuery: (query: string) => void;
+  setCurrentBookingList: (currentEntity: Booking[]) => void;
+  setAllHotelList: (currentEntity: Hotel[]) => void;
+  setCurrentHotelList: (currentEntity: Hotel[]) => void;
   setCheckInDate: (date: Date) => void;
   setCheckOutDate: (date: Date) => void;
 }
 
 export const HotelsContext = createContext<THotelContext>({
+  searchQuery: '',
   currentBookingList: [],
-  currentHospitalList: [],
+  allHotelList: [],
+  currentHotelList: [],
   checkInDate: new Date(),
   checkOutDate: new Date(),
+  setSearchQuery: () => {},
   setCurrentBookingList: () => {},
-  setCurrentHospitalList: () => {},
+  setAllHotelList: () => {},
+  setCurrentHotelList: () => {},
   setCheckInDate: () => {},
   setCheckOutDate: () => {},
 });
@@ -30,8 +41,10 @@ interface Props {
 }
 
 export const HotelsProvider = ({ children }: Props) => {
-  const [currentBookingList, setCurrentBookingList] = useState<Hotel[]>([]);
-  const [currentHospitalList, setCurrentHospitalList] = useState<Hotel[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [currentBookingList, setCurrentBookingList] = useState<Booking[]>([]);
+  const [allHotelList, setAllHotelList] = useState<Hotel[]>([]);
+  const [currentHotelList, setCurrentHotelList] = useState<Hotel[]>([]);
   const [checkInDate, setCheckInDate] = useState<Date>(new Date());
   const [checkOutDate, setCheckOutDate] = useState<Date>(new Date());
 
@@ -40,19 +53,57 @@ export const HotelsProvider = ({ children }: Props) => {
       if ('message' in data) {
         return;
       }
-      setCurrentHospitalList(data.data);
+      setAllHotelList(data.data);
     });
+    const token = getCookie('my_token');
+    if (token) {
+      getBooking(token as string).then((data) => {
+        if ('message' in data) {
+          return;
+        }
+        setCurrentBookingList(data.data);
+      });
+    }
   }, []);
+
+  useEffect(() => {
+    searchHandle(searchQuery, allHotelList, setCurrentHotelList);
+  }, [allHotelList]);
+
+  useEffect(() => {
+    for (let i = 0; i < currentBookingList.length; i++) {
+      const booking = currentBookingList[i];
+      const bookingDate = new Date(booking.bookingDate);
+      const checkoutDate = new Date(booking.checkoutDate);
+      for (let j = 0; j < currentHotelList.length; j++) {
+        const hotel = currentHotelList[j];
+        if (
+          bookingDate === checkOutDate ||
+          checkoutDate === checkInDate ||
+          booking.hotel.id === hotel.id
+        ) {
+          currentHotelList[j].isBooked = false;
+        } else {
+          currentHotelList[j].isBooked = true;
+        }
+      }
+    }
+    setCurrentHotelList([...currentHotelList]);
+  }, [checkInDate, checkOutDate, currentBookingList]);
 
   return (
     <HotelsContext.Provider
       value={{
+        searchQuery,
         currentBookingList,
-        currentHospitalList,
+        allHotelList,
+        currentHotelList,
         checkInDate,
         checkOutDate,
+        setSearchQuery,
         setCurrentBookingList,
-        setCurrentHospitalList,
+        setAllHotelList,
+        setCurrentHotelList,
         setCheckInDate,
         setCheckOutDate,
       }}

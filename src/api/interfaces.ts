@@ -35,8 +35,36 @@ export interface Hotel {
   picture?: string;
   __v?: number;
   id?: string;
+  isBooked?: boolean;
 }
 
 export interface ErrorResponse {
   message: string;
+}
+
+export interface BookingRequest {
+  bookingDate: string;
+  checkoutDate: string;
+  createdAt: string;
+}
+
+export interface Booking {
+  bookingDate: string;
+  checkoutDate: string;
+  user: string;
+  hotel: hotelBooking;
+  createdAt: string;
+}
+
+export interface hotelBooking {
+  _id: string;
+  name: string;
+  address: string;
+  tel: string;
+  id: string;
+}
+export interface GetBookingResponse {
+  success: boolean;
+  count: number;
+  data: Booking[];
 }
