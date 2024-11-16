@@ -134,19 +134,21 @@ export class UserApi extends runtime.BaseAPI {
    */
   async authMeGetRaw(
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    token?: string,
   ): Promise<runtime.ApiResponse<GetMeResponse>> {
     const queryParameters: any = {};
 
     const headerParameters: runtime.HTTPHeaders = {};
+    headerParameters['Authorization'] = `Bearer ${token}`;
 
-    if (this.configuration && this.configuration.accessToken) {
-      const token = this.configuration.accessToken;
-      const tokenString = await token('bearerAuth', []);
+    // if (this.configuration && this.configuration.accessToken) {
+    //   const token = this.configuration.accessToken;
+    //   const tokenString = await token('bearerAuth', []);
 
-      if (tokenString) {
-        headerParameters['Authorization'] = `Bearer ${tokenString}`;
-      }
-    }
+    //   if (tokenString) {
+    //     headerParameters['Authorization'] = `Bearer ${token}`;
+    //   }
+    // }
     const response = await this.request(
       {
         path: `/auth/me`,
@@ -165,8 +167,9 @@ export class UserApi extends runtime.BaseAPI {
    */
   async authMeGet(
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    token?: string,
   ): Promise<GetMeResponse> {
-    const response = await this.authMeGetRaw(initOverrides);
+    const response = await this.authMeGetRaw(initOverrides, token);
     return await response.value();
   }
 

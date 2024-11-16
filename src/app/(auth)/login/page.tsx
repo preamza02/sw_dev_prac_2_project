@@ -1,24 +1,57 @@
 'use client';
+import { setCookie, getCookie } from 'cookies-next';
 import AuthContainer from '../_component/authContainer';
 import LinkButton from '@/app/_components/linkButton';
 import ActionButton from '@/app/_components/actionButton';
 import AuthFormElement from '../_component/authFormElement';
 import { UserApi } from '@/api/gen';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { useRouter } from 'next/navigation';
+import { AuthContext } from '@/context/AuthContext';
+import { deleteCookie } from 'cookies-next';
+
 export default function LoginHomePage() {
+  const router = useRouter();
   const userAPI = new UserApi();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const loginOnclick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    console.log(email, password);
-    userAPI
-      .authLoginPost({
+  const { setIsLogin, setCurrentUser } = useContext(AuthContext);
+
+  const handleLogout = () => {
+    // Clear the authentication cookie
+    deleteCookie('token');
+
+    // Update the Auth Context
+    setIsLogin(false);
+    setCurrentUser(null);
+
+    // Redirect to the login page
+    router.push('/login');
+  };
+  const loginOnclick = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    try {
+      const response = await userAPI.authLoginPost({
         loginUserRequest: {
           email: email,
           password: password,
         },
-      })
-      .then((value) => console.log(value));
+      });
+
+      // Set cookie with the token
+      setCookie('token', response.token, {
+        maxAge: 60 * 60 * 24 * 30, // 30 days
+      });
+
+      const user = await userAPI.authMeGet(undefined, getCookie('token') as string);
+      setCurrentUser(user.data ?? null);
+      setIsLogin(true);
+
+      // Navigate to root path after login
+      router.push('/');
+    } catch (error) {
+      console.error('Login failed:', error);
+      alert('Login failed. Please check your credentials.');
+    }
   };
   return (
     <AuthContainer>

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import React from 'react';
 import '../globals.css';
 import NavBar from '../_components/navbar';
+import { AuthProvider } from '@/context/AuthContext';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -13,12 +14,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  console.log(children);
   return (
     <html lang="en">
       <body>
-        <NavBar></NavBar>
-        {children}
+        <AuthProvider>
+          <NavBar></NavBar>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );
