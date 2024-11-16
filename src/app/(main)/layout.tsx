@@ -4,6 +4,7 @@ import '../globals.css';
 import NavBar from '../_components/navbar';
 import { AuthProvider } from '@/context/AuthContext';
 import SearchBar from './_components/searchBar';
+import Line from '../_components/line';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -18,12 +19,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <AuthProvider>
-        <body className="h-screen max-h-screen overflow-hidden">
+        <body className="h-screen max-h-screen">
           <NavBar></NavBar>
           <SearchBar></SearchBar>
-          <div className="flex w-full flex-row">
-            <div className="my-5 w-1/4 border-r border-black pr-4">555</div>
-            <div className="w-3/4 pl-4">{children}</div>
+          <div style={{ height: 'calc(100vh - 140px)' }} className="flex w-full flex-row">
+            <div className="w-1/4 pr-4">555</div>
+            <Line />
+            <div className="flex w-full flex-col pl-4">{children}</div>
           </div>
         </body>
       </AuthProvider>

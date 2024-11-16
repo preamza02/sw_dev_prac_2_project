@@ -12,7 +12,7 @@ export default function NavBar() {
 
   const handleLogout = () => {
     // Clear the authentication cookie
-    deleteCookie('token');
+    deleteCookie('my_token');
 
     // Update the Auth Context
     setIsLogin(false);
@@ -48,6 +48,7 @@ export default function NavBar() {
             </button>
             <div className="flex h-[45px] w-[45px] items-center justify-center rounded-full bg-gray-600">
               <h1 className="text-xl font-bold">{currentUser?.name?.charAt(0).toUpperCase()}</h1>
+              {/* <p>{currentUser?.name}</p> */}
             </div>
 
             {/* Logout as a styled link */}

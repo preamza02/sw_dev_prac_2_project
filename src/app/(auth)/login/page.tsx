@@ -1,25 +1,25 @@
 'use client';
-import { setCookie, getCookie } from 'cookies-next';
+import { setCookie, deleteCookie } from 'cookies-next';
 import AuthContainer from '../_component/authContainer';
 import LinkButton from '@/app/_components/linkButton';
 import ActionButton from '@/app/_components/actionButton';
 import AuthFormElement from '../_component/authFormElement';
-import { UserApi } from '@/api/gen';
+import loginUser from '@/api/user/login.api';
+import getUserProfile from '@/api/user/getUserProfile.api';
 import { useState, useContext } from 'react';
 import { useRouter } from 'next/navigation';
 import { AuthContext } from '@/context/AuthContext';
-import { deleteCookie } from 'cookies-next';
+import { LoginResponse } from '@/api/interfaces';
 
 export default function LoginHomePage() {
   const router = useRouter();
-  const userAPI = new UserApi();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const { setIsLogin, setCurrentUser } = useContext(AuthContext);
 
   const handleLogout = () => {
     // Clear the authentication cookie
-    deleteCookie('token');
+    deleteCookie('my_token');
 
     // Update the Auth Context
     setIsLogin(false);
@@ -30,20 +30,18 @@ export default function LoginHomePage() {
   };
   const loginOnclick = async (event: React.MouseEvent<HTMLButtonElement>) => {
     try {
-      const response = await userAPI.authLoginPost({
-        loginUserRequest: {
-          email: email,
-          password: password,
-        },
-      });
+      const response = await loginUser(email, password);
+      console.log('Login response:', response, (response as LoginResponse).token);
 
-      // Set cookie with the token
-      setCookie('token', response.token, {
+      await setCookie('my_token', (response as LoginResponse).token, {
         maxAge: 60 * 60 * 24 * 30, // 30 days
       });
 
-      const user = await userAPI.authMeGet(undefined, getCookie('token') as string);
-      setCurrentUser(user.data ?? null);
+      const user = await getUserProfile((response as LoginResponse).token);
+      if ('message' in user) {
+        throw new Error('Failed to fetch user profile');
+      }
+      setCurrentUser(user.data);
       setIsLogin(true);
 
       // Navigate to root path after login
