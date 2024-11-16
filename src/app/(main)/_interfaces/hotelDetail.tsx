@@ -6,7 +6,7 @@ export interface QuestionAnswer {
 }
 
 export interface HotelDetail {
-  hotelID: string;
+  hotelID: string ;
   hotelPicture: string;
   hotelName: string;
   hotelTel: string;
@@ -14,7 +14,23 @@ export interface HotelDetail {
   hotelDistrict: string;
   hotelProvince: string;
   hotelPostalCode: string;
-  hotelAddressFull: string;
-  facilityDetails: FacilityDetail[];
-  questionAnswers: QuestionAnswer[];
+  hotelAddressFull?: string;
+  facilityDetails?: FacilityDetail[];
+  questionAnswers?: QuestionAnswer[];
+}
+
+export function initialHotelDetail(): HotelDetail {
+  return {
+    hotelID: '',
+    hotelPicture: '',
+    hotelName: '',
+    hotelTel: '',
+    hotelAddress: '',
+    hotelDistrict: '',
+    hotelProvince: '',
+    hotelPostalCode: '',
+    hotelAddressFull: '',
+    facilityDetails: [],
+    questionAnswers: [],
+  };
 }
