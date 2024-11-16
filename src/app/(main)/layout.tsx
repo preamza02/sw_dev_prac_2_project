@@ -3,6 +3,7 @@ import React from 'react';
 import '../globals.css';
 import NavBar from '../_components/navbar';
 import { AuthProvider } from '@/context/AuthContext';
+import SearchBar from './_components/searchBar';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -19,7 +20,13 @@ export default function RootLayout({
       <body>
         <AuthProvider>
           <NavBar></NavBar>
-          {children}
+          <div>
+            <SearchBar></SearchBar>
+            <div className="flex w-full flex-row">
+              <div className="w-1/4">555</div>
+              <div className="w-3/4 pr-20">{children}</div>
+            </div>
+          </div>
         </AuthProvider>
       </body>
     </html>
