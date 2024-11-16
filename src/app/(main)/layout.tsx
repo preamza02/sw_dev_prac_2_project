@@ -3,6 +3,7 @@ import React from 'react';
 import '../globals.css';
 import NavBar from '../_components/navbar';
 import { AuthProvider } from '@/context/AuthContext';
+import { HotelsProvider } from '@/context/HotelContext';
 import SearchBar from './_components/searchBar';
 import Line from '../_components/line';
 
@@ -19,15 +20,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <AuthProvider>
-        <body className="h-screen max-h-screen">
-          <NavBar></NavBar>
-          <SearchBar></SearchBar>
-          <div style={{ height: 'calc(100vh - 140px)' }} className="flex w-full flex-row">
-            <div className="w-1/4 pr-4">555</div>
-            <Line />
-            <div className="flex w-full flex-col pl-4">{children}</div>
-          </div>
-        </body>
+        <HotelsProvider>
+          <body className="h-screen max-h-screen">
+            <NavBar></NavBar>
+            <SearchBar></SearchBar>
+            <div style={{ height: 'calc(100vh - 140px)' }} className="flex w-full flex-row">
+              <div className="w-1/4 pr-4">555</div>
+              <Line />
+              <div className="flex w-full flex-col pl-4">{children}</div>
+            </div>
+          </body>
+        </HotelsProvider>
       </AuthProvider>
     </html>
   );

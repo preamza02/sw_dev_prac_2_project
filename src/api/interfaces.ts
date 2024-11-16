@@ -17,18 +17,15 @@ export interface LoginResponse {
   token: string; // Assuming the token is returned after successful login
 }
 
-export interface Hospital {
-  name: string;
-  address: string;
-  district: string;
-  province: string;
-  postalcode: string;
-  tel?: string;
-  picture?: string;
+export interface HotelResponse {
+  success: boolean;
+  count: number;
+  pagination: object;
+  data: Hotel[];
 }
 
-export interface HospitalResponse {
-  id: string;
+export interface Hotel {
+  _id?: string;
   name: string;
   address: string;
   district: string;
@@ -36,6 +33,8 @@ export interface HospitalResponse {
   postalcode: string;
   tel?: string;
   picture?: string;
+  __v?: number;
+  id?: string;
 }
 
 export interface ErrorResponse {
