@@ -1,24 +1,49 @@
 'use client';
+import { setCookie, deleteCookie } from 'cookies-next';
 import AuthContainer from '../_component/authContainer';
 import LinkButton from '@/app/_components/linkButton';
 import ActionButton from '@/app/_components/actionButton';
 import AuthFormElement from '../_component/authFormElement';
-import { UserApi } from '@/api/gen';
-import { useState } from 'react';
+import loginUser from '@/api/user/login.api';
+import getUserProfile from '@/api/user/getUserProfile.api';
+import { useState, useContext } from 'react';
+import { useRouter } from 'next/navigation';
+import { AuthContext } from '@/context/AuthContext';
+import { LoginResponse } from '@/api/interfaces';
+
 export default function LoginHomePage() {
-  const userAPI = new UserApi();
+  const router = useRouter();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const loginOnclick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    console.log(email, password);
-    userAPI
-      .authLoginPost({
-        loginUserRequest: {
-          email: email,
-          password: password,
-        },
-      })
-      .then((value) => console.log(value));
+  const { setIsLogin, setCurrentUser } = useContext(AuthContext);
+
+  const handleLogout = () => {
+    // Clear the authentication cookie
+    deleteCookie('my_token');
+
+    // Update the Auth Context
+    setIsLogin(false);
+    setCurrentUser(null);
+
+    // Redirect to the login page
+    router.push('/login');
+  };
+  const loginOnclick = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    try {
+      const response = await loginUser(email, password);
+      console.log('Login response:', response, (response as LoginResponse).token);
+
+      await setCookie('my_token', (response as LoginResponse).token, {
+        maxAge: 60 * 60 * 24 * 30, // 30 days
+      });
+      setIsLogin(true);
+
+      // Navigate to root path after login
+      router.push('/');
+    } catch (error) {
+      console.error('Login failed:', error);
+      alert('Login failed. Please check your credentials.');
+    }
   };
   return (
     <AuthContainer>

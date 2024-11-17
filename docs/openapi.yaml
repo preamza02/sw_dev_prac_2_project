@@ -1,0 +1,191 @@
+openapi: 3.0.0
+info:
+  title: 'Library API'
+  version: 1.0.0
+  description: 'Hotel Booking API'
+servers:
+  - url: 'http://localhost:5000/api/v1'
+paths:
+  /auth/register:
+    post:
+      summary: 'Create a new user'
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: 'The user was successfully created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '500':
+          description: 'Some server error'
+  /auth/login:
+    post:
+      summary: 'Log-in to the system'
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '201':
+          description: 'Log-in Successfully'
+        '500':
+          description: 'Some server error'
+  /auth/me:
+    get:
+      security:
+        - bearerAuth: []
+      summary: 'Return information about me'
+      tags:
+        - User
+      responses:
+        '201':
+          description: 'My user profile'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '500':
+          description: 'Some server error'
+  /hospitals:
+    post:
+      summary: 'Create a new hospital'
+      security:
+        - bearerAuth: []
+      tags:
+        - Hospitals
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Hospital'
+      responses:
+        '201':
+          description: 'The hospital was successfully created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hospital'
+        '500':
+          description: 'Some server error'
+    get:
+      summary: 'Returns the list of all the hospitals'
+      tags:
+        - Hospitals
+      responses:
+        '200':
+          description: 'The list of the hospitals'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Hospital'
+  '/hospitals/{id}':
+    get:
+      summary: 'Get the hospital by id'
+      tags:
+        - Hospitals
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: 'The hospital id'
+      responses:
+        '200':
+          description: 'The hospital description by id'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hospital'
+        '404':
+          description: 'The hospital was not found'
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - name
+        - email
+        - tel
+        - password
+      properties:
+        name:
+          type: string
+          description: 'Name of user'
+        email:
+          type: string
+          description: 'Email of user'
+        tel:
+          type: string
+          description: 'Telephone number of user'
+        role:
+          type: string
+          description: 'Role of user (admin or user), default is user'
+        password:
+          type: string
+          description: 'Password of user'
+        createdAt:
+          type: string
+          format: date
+          example: '2023-08-20'
+          description: 'Date of creation (default is current date-time)'
+    Hospital:
+      type: object
+      required:
+        - name
+        - address
+        - district
+        - province
+        - postalcode
+      properties:
+        name:
+          type: string
+          description: 'Name of the hospital'
+        address:
+          type: string
+          description: 'House No., Street, Road'
+        district:
+          type: string
+          description: District
+        province:
+          type: string
+          description: province
+        postalcode:
+          type: string
+          description: '5-digit postal code'
+        tel:
+          type: string
+          description: 'telephone number'
+        picture:
+          type: string
+          description: 'hospital picture'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+tags:
+  - name: User
+    description: 'The user API'
+  - name: Hospitals
+    description: 'The hospitals managing API'

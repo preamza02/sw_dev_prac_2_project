@@ -6,6 +6,7 @@ const nextConfig = {
                 hostname: "*",
             },
         ],
+        domains: ['cf.bstatic.com'], // Add the external domain here
     },
 };
 
