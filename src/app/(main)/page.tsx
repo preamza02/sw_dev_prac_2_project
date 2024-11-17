@@ -1,3 +1,10 @@
+import BookedHotelCard from "../_components/bookedHotelCard";
+
+
 export default function MainHomePage() {
-  return <div>5555</div>;
+  return (
+    <div>
+      <BookedHotelCard />
+    </div>
+  )
 }

@@ -34,6 +34,8 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
   const [isSnackBarOpen, setIsSnackBarOpen] = useState(false);
   const [snackBarMessage, setSnackBarMessage] = useState('');
   const [isEditAddressCardShow, setIsEditAddressCardShow] = useState(false);
+  const [isUploadImageCardShow, setIsUploadImageCardShow] = useState(false);
+  const [onPreviewImageURL, setOnPreviewImageURL] = useState('');
 
   const severityMapping: { [key: string]: 'error' | 'warning' | 'info' | 'success' } = {
     'Booking success': 'success',
@@ -56,6 +58,7 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
     if (!hotelID) return;
     getHotelDetailByID(hotelID).then((resHotelDetail) => {
       setHotelDetail(resHotelDetail);
+      setOnPreviewImageURL(resHotelDetail.hotelPicture);
     });
   }, [hotelID, setHotelDetail]);
 
@@ -87,12 +90,10 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
     });
   };
   const onClickUploadImage = () => {
-    if (!hotelID) return;
-    const image = new File([''], 'test.jpg', { type: 'image/jpeg' });
-    uploadHotelImage(hotelID, image).then(() => {
-      setSnackBarMessage('Image uploaded');
-      setIsSnackBarOpen(true);
-    });
+    setIsUploadImageCardShow(!isUploadImageCardShow);
+    setHotelDetail({ ...hotelDetail, hotelPicture: onPreviewImageURL });
+    console.log(hotelDetail);
+
   };
   const onAddFacility = () => {
     if (!hotelID) return;
@@ -138,6 +139,57 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
     setHotelDetail(hotelDetail);
     console.log(hotelDetail);
   }
+  const onClickPreviewImage = () => {
+    setOnPreviewImageURL((document.getElementById('hotel-image-url') as HTMLInputElement).value);
+  }
+
+  const uploadImageCard = (
+    <div className="fixed inset-0 bg-[rgba(0,0,0,0.5)] flex justify-center items-center">
+      <div className="flex flex-col gap-[16px] bg-[#ffffff] p-[16px] rounded-[20px] shadow-lg w-[869px]">
+        <h1 className="text-[27px]">Upload Image</h1>
+        <div className="flex flex-row items-center gap-[16px]">
+          <div className="w-[150px] text-[20px]">Image URL</div>:
+          <input
+            type="text"
+            id="hotel-image-url"
+            placeholder={onPreviewImageURL}
+            className="text-[20px] w-auto border-[1px] border-[#000000] rounded-[10px] p-[8px]"
+          />
+        </div>
+        <div className="relative h-[200px] w-full rounded-[20px]">
+          {/* show image from link */}
+          <Image
+            src={onPreviewImageURL}
+            alt="Hotel Banner"
+            layout="fill"
+            objectFit="cover"
+            className="rounded-[20px]"
+          />
+        </div>
+        <div className="flex flex-row items-center gap-[8px] justify-end w-fit ml-auto">
+          <Button
+            className="rounded-[10px] bg-[#4190ed] font-itim text-[14px] text-white h-[40px]"
+            onClick={onClickPreviewImage}
+          >
+            Preview
+          </Button>
+          <Button
+            className="rounded-[10px] bg-[#4190ed] font-itim text-[14px] text-white h-[40px]"
+            onClick={onClickUploadImage}
+          >
+            Upload
+          </Button>
+          <Button
+            className="rounded-[10px] bg-[#4190ed] font-itim text-[14px] text-white h-[40px]"
+            onClick={() => setIsUploadImageCardShow(false)}
+            variant="outlined"
+          >
+            Cancel
+          </Button>
+        </div>
+      </div>
+    </div>
+  )
 
   const editAddressCard = (
     // is show over all the screen on middle and have a close button
@@ -314,6 +366,7 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
         </Alert>
       </Snackbar>
       {isEditAddressCardShow && editAddressCard}
+      {isUploadImageCardShow && uploadImageCard}
     </div>
   );
 }

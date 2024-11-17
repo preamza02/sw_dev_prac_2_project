@@ -140,10 +140,6 @@ export async function createHotel(hotelDetail: HotelDetail): Promise<void> {
   }
 }
 
-export async function uploadHotelImage(hotelID: string, image: File): Promise<void> {
-  // TODO: upload image
-}
-
 export async function bookHotel(hotelID: string): Promise<void> {
   const response = await fetch(baseURI + 'hotels/' + hotelID + '/bookings', { method: 'POST' });
   const data = await response.json();
