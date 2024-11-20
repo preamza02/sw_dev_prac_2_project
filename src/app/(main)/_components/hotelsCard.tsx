@@ -1,6 +1,5 @@
 'use client';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useContext } from 'react';
 import { AuthContext } from '@/context/AuthContext';
 import { Hotel } from '@/api/interfaces';

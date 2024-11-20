@@ -1,5 +1,5 @@
 'use client';
-import { setCookie, deleteCookie } from 'cookies-next';
+import { setCookie } from 'cookies-next';
 import AuthContainer from '../_component/authContainer';
 import LinkButton from '@/app/_components/linkButton';
 import ActionButton from '@/app/_components/actionButton';
@@ -17,7 +17,7 @@ export default function LoginHomePage() {
   const [password, setPassword] = useState<string>('');
   const { setIsLogin } = useContext(AuthContext);
 
-  const loginOnclick = async (event: React.MouseEvent<HTMLButtonElement>) => {
+  const loginOnclick = async () => {
     try {
       const response = await loginUser(email, password);
       console.log('Login response:', response, (response as LoginResponse).token);

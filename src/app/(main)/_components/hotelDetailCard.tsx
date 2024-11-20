@@ -318,7 +318,7 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
         <p className="text-[20px] opacity-80" id="hotel-description">
           {hotelDetail.hotelName} is an exclusive property in the vibrant Ratchada area of Bangkok,
           offering excellent hospitality and convenient amenities. With a fitness center, indoor
-          pool, and shared lounge/TV area, it's perfect for two travelers.
+          pool, and shared lounge/TV area, it is perfect for two travelers.
         </p>
         {splitLine}
         <p className="text-[20px] opacity-80" id="hotel-facility">
