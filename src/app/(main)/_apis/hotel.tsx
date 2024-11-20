@@ -7,19 +7,22 @@ import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import ChairIcon from '@mui/icons-material/Chair';
 import PoolIcon from '@mui/icons-material/Pool';
 import FacilityDetail from '@main/_interfaces/facilityDetail';
-
-const baseURI = 'http://localhost:5001/api/v1/';
+import { BASE_URL } from '@/config/config';
+import { Hotel } from '@/api/interfaces';
 
 export async function getHotelDetailByID(hotelID: string): Promise<HotelDetail> {
-    console.log(`Get hotel ID: ${hotelID}`);
-    const response = await fetch(baseURI + 'hotels/' + hotelID);
-    const hotelResponse = await response.json();
-    console.log(hotelResponse);
-    console.log(responseToHotelDetail(hotelResponse.data));
-
+  console.log(`Get hotel ID: ${hotelID}`);
+  const response = await fetch(BASE_URL + '/api/v1/hotels/' + hotelID);
+  const hotelResponse = await response.json();
+  console.log(hotelResponse);
+  console.log(responseToHotelDetail(hotelResponse.data));
+  // const hotelDetail: HotelDetail = responseToHotelDetail(hotelResponse.data);
 
   // mock data
-  const hotelPicture = '/image/hotel_banner.svg';
+  // const hotelPicture = '/image/hotel_banner.svg';
+  const imageUrl = hotelResponse.data.picture;
+  const hotelPicture =
+    imageUrl.startsWith('http') || imageUrl.startsWith('/') ? imageUrl : '/image/hotel_banner.svg';
   const hotelName = hotelResponse.data.name;
   const hotelTel = hotelResponse.data.tel;
   const hotelAddress = hotelResponse.data.address;
@@ -90,7 +93,7 @@ export async function getHotelDetailByID(hotelID: string): Promise<HotelDetail> 
 }
 
 export async function deleteHotelByID(hotelID: string): Promise<void> {
-  const response = await fetch(baseURI + 'hotels/' + hotelID, { method: 'DELETE' });
+  const response = await fetch(BASE_URL + '/hotels/' + hotelID, { method: 'DELETE' });
   const data = await response.json();
   console.log(data);
 
@@ -105,7 +108,7 @@ export async function updateHotelByID(hotelID: string, hotelDetail: HotelDetail)
   console.log(`Update hotel ID: ${hotelID}`);
   console.log(hotelDetail);
   console.log(hotelDetailToRequest(hotelDetail));
-  const response = await fetch(baseURI + 'hotels/' + hotelID, {
+  const response = await fetch(BASE_URL + '/hotels/' + hotelID, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -123,7 +126,7 @@ export async function updateHotelByID(hotelID: string, hotelDetail: HotelDetail)
 }
 
 export async function createHotel(hotelDetail: HotelDetail): Promise<void> {
-  const response = await fetch(baseURI + 'hotels', {
+  const response = await fetch(BASE_URL + '/hotels', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -141,7 +144,7 @@ export async function createHotel(hotelDetail: HotelDetail): Promise<void> {
 }
 
 export async function bookHotel(hotelID: string): Promise<void> {
-  const response = await fetch(baseURI + 'hotels/' + hotelID + '/bookings', { method: 'POST' });
+  const response = await fetch(BASE_URL + '/hotels/' + hotelID + '/bookings', { method: 'POST' });
   const data = await response.json();
   console.log(data);
 
@@ -156,13 +159,12 @@ export async function addFacility(hotelID: string, facilityDetail: FacilityDetai
   // TODO: add facility
 }
 
-
-export function responseToHotelDetail(response: any): HotelDetail {
+export function responseToHotelDetail(response: Hotel): HotelDetail {
   return {
-    hotelID: response._id,
-    hotelPicture: response.picture,
+    hotelID: response._id as string,
+    hotelPicture: response.picture as string,
     hotelName: response.name,
-    hotelTel: response.tel,
+    hotelTel: response.tel as string,
     hotelAddress: response.address,
     hotelDistrict: response.district,
     hotelProvince: response.province,

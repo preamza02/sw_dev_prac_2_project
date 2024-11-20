@@ -4,7 +4,8 @@ import { Button } from '@mui/material';
 import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { HotelsContext } from '@/context/HotelContext';
 import { HotelDetail, initialHotelDetail } from '@main/_interfaces/hotelDetail';
 
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
@@ -17,10 +18,10 @@ import {
   deleteHotelByID,
   updateHotelByID,
   createHotel,
-  uploadHotelImage,
-  bookHotel,
   addFacility,
 } from '@main/_apis/hotel';
+
+import bookingOnclick from '../_utils/bookingOnclick';
 
 type HotelDetailCardProps = {
   isEditing: boolean;
@@ -36,6 +37,8 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
   const [isEditAddressCardShow, setIsEditAddressCardShow] = useState(false);
   const [isUploadImageCardShow, setIsUploadImageCardShow] = useState(false);
   const [onPreviewImageURL, setOnPreviewImageURL] = useState('');
+
+  const { checkInDate, checkOutDate } = useContext(HotelsContext);
 
   const severityMapping: { [key: string]: 'error' | 'warning' | 'info' | 'success' } = {
     'Booking success': 'success',
@@ -84,7 +87,7 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
   };
   const onClickBook = () => {
     if (!hotelID) return;
-    bookHotel(hotelID).then(() => {
+    bookingOnclick(checkInDate, checkOutDate, hotelID).then(() => {
       setIsSnackBarOpen(true);
       setSnackBarMessage('Booking success');
     });
@@ -93,7 +96,6 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
     setIsUploadImageCardShow(!isUploadImageCardShow);
     setHotelDetail({ ...hotelDetail, hotelPicture: onPreviewImageURL });
     console.log(hotelDetail);
-
   };
   const onAddFacility = () => {
     if (!hotelID) return;
@@ -138,14 +140,14 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
     }
     setHotelDetail(hotelDetail);
     console.log(hotelDetail);
-  }
+  };
   const onClickPreviewImage = () => {
     setOnPreviewImageURL((document.getElementById('hotel-image-url') as HTMLInputElement).value);
-  }
+  };
 
   const uploadImageCard = (
-    <div className="fixed inset-0 bg-[rgba(0,0,0,0.5)] flex justify-center items-center">
-      <div className="flex flex-col gap-[16px] bg-[#ffffff] p-[16px] rounded-[20px] shadow-lg w-[869px]">
+    <div className="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.5)]">
+      <div className="flex w-[869px] flex-col gap-[16px] rounded-[20px] bg-[#ffffff] p-[16px] shadow-lg">
         <h1 className="text-[27px]">Upload Image</h1>
         <div className="flex flex-row items-center gap-[16px]">
           <div className="w-[150px] text-[20px]">Image URL</div>:
@@ -153,7 +155,7 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
             type="text"
             id="hotel-image-url"
             placeholder={onPreviewImageURL}
-            className="text-[20px] w-auto border-[1px] border-[#000000] rounded-[10px] p-[8px]"
+            className="w-auto rounded-[10px] border-[1px] border-[#000000] p-[8px] text-[20px]"
           />
         </div>
         <div className="relative h-[200px] w-full rounded-[20px]">
@@ -161,26 +163,26 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
           <Image
             src={onPreviewImageURL}
             alt="Hotel Banner"
-            layout="fill"
+            // layout="fill"
             objectFit="cover"
             className="rounded-[20px]"
           />
         </div>
-        <div className="flex flex-row items-center gap-[8px] justify-end w-fit ml-auto">
+        <div className="ml-auto flex w-fit flex-row items-center justify-end gap-[8px]">
           <Button
-            className="rounded-[10px] bg-[#4190ed] font-itim text-[14px] text-white h-[40px]"
+            className="h-[40px] rounded-[10px] bg-[#4190ed] font-itim text-[14px] text-white"
             onClick={onClickPreviewImage}
           >
             Preview
           </Button>
           <Button
-            className="rounded-[10px] bg-[#4190ed] font-itim text-[14px] text-white h-[40px]"
+            className="h-[40px] rounded-[10px] bg-[#4190ed] font-itim text-[14px] text-white"
             onClick={onClickUploadImage}
           >
             Upload
           </Button>
           <Button
-            className="rounded-[10px] bg-[#4190ed] font-itim text-[14px] text-white h-[40px]"
+            className="h-[40px] rounded-[10px] bg-[#4190ed] font-itim text-[14px] text-white"
             onClick={() => setIsUploadImageCardShow(false)}
             variant="outlined"
           >
@@ -189,12 +191,12 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
         </div>
       </div>
     </div>
-  )
+  );
 
   const editAddressCard = (
     // is show over all the screen on middle and have a close button
-    <div className="fixed inset-0 bg-[rgba(0,0,0,0.5)] flex justify-center items-center">
-      <div className="flex flex-col gap-[16px] bg-[#ffffff] p-[16px] rounded-[20px] shadow-lg">
+    <div className="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.5)]">
+      <div className="flex flex-col gap-[16px] rounded-[20px] bg-[#ffffff] p-[16px] shadow-lg">
         <h1 className="text-[27px]">Edit Address</h1>
         <div className="flex flex-row items-center gap-[16px]">
           <div className="w-[150px] text-[20px]">Address</div>:
@@ -202,7 +204,7 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
             type="text"
             value={hotelDetail.hotelAddress}
             onChange={(e) => setHotelDetail({ ...hotelDetail, hotelAddress: e.target.value })}
-            className="text-[20px] w-auto border-[1px] border-[#000000] rounded-[10px] p-[8px]"
+            className="w-auto rounded-[10px] border-[1px] border-[#000000] p-[8px] text-[20px]"
           />
         </div>
         <div className="flex flex-row items-center gap-[16px]">
@@ -211,7 +213,7 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
             type="text"
             value={hotelDetail.hotelDistrict}
             onChange={(e) => setHotelDetail({ ...hotelDetail, hotelDistrict: e.target.value })}
-            className="text-[20px] w-auto border-[1px] border-[#000000] rounded-[10px] p-[8px]"
+            className="w-auto rounded-[10px] border-[1px] border-[#000000] p-[8px] text-[20px]"
           />
         </div>
         <div className="flex flex-row items-center gap-[16px]">
@@ -220,7 +222,7 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
             type="text"
             value={hotelDetail.hotelProvince}
             onChange={(e) => setHotelDetail({ ...hotelDetail, hotelProvince: e.target.value })}
-            className="text-[20px] w-auto border-[1px] border-[#000000] rounded-[10px] p-[8px]"
+            className="w-auto rounded-[10px] border-[1px] border-[#000000] p-[8px] text-[20px]"
           />
         </div>
         <div className="flex flex-row items-center gap-[16px]">
@@ -229,7 +231,7 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
             type="text"
             value={hotelDetail.hotelPostalCode}
             onChange={(e) => setHotelDetail({ ...hotelDetail, hotelPostalCode: e.target.value })}
-            className="text-[20px] w-auto border-[1px] border-[#000000] rounded-[10px] p-[8px]"
+            className="w-auto rounded-[10px] border-[1px] border-[#000000] p-[8px] text-[20px]"
           />
         </div>
         <h1 className="text-[27px]">Edit Contract</h1>
@@ -239,18 +241,18 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
             type="text"
             value={hotelDetail.hotelTel}
             onChange={(e) => setHotelDetail({ ...hotelDetail, hotelTel: e.target.value })}
-            className="text-[20px] w-auto border-[1px] border-[#000000] rounded-[10px] p-[8px]"
+            className="w-auto rounded-[10px] border-[1px] border-[#000000] p-[8px] text-[20px]"
           />
         </div>
         <Button
-          className="rounded-[10px] bg-[#4190ed] font-itim text-[14px] text-white h-[40px] mx-[70px]"
+          className="mx-[70px] h-[40px] rounded-[10px] bg-[#4190ed] font-itim text-[14px] text-white"
           onClick={onClickEditAddress}
         >
           Save
         </Button>
       </div>
     </div>
-  )
+  );
 
   const splitLine = <div className="h-[1px] w-full bg-[#000000]" />;
 
@@ -278,19 +280,18 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
       <div className="flex flex-col gap-[16px] px-[20px]" id="hotel-detail">
         <div className="flex flex-row items-center justify-between p-[16px]" id="header-item">
           {isEditing ? (
-            <div className="flex flex-row items-center gap-[16px] border-[1px] border-[#000000] rounded-[10px] p-[8px]">
+            <div className="flex flex-row items-center gap-[16px] rounded-[10px] border-[1px] border-[#000000] p-[8px]">
               <input
                 type="text"
                 value={hotelDetail.hotelName}
                 onChange={(e) => setHotelDetail({ ...hotelDetail, hotelName: e.target.value })}
-                className="text-[20px] w-auto border-none outline-none"
+                className="w-auto border-none text-[20px] outline-none"
               />
               🖋️
             </div>
           ) : (
             <h1 className="text-[27px]">{hotelDetail.hotelName}</h1>
-          )
-          }
+          )}
           {buttonGroup}
         </div>
         {splitLine}
@@ -321,37 +322,37 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
           )}
         </div>
         {splitLine}
-          <p className="text-[20px] opacity-80" id="hotel-faskedquestion">
-            Frequently asked question
-          </p>
-          {hotelDetail.questionAnswers?.map((qa, index) => (
-            <div className="flex flex-row px-[10px]" key={index}>
-              <Button
-                onClick={() => toggleAnswer(index)}
-                className="items-top flex h-[30px] flex-row gap-[10px] align-top"
-              >
-                {isShowAnswers[index] ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
-              </Button>
-              <div className="flex flex-col gap-[10px]">
-                <p className="text-[20px] opacity-100">Q: {qa.question}</p>
-                <p
-                  className="text-[20px] opacity-80 transition-all duration-500 ease-in-out"
-                  style={{ maxHeight: isShowAnswers[index] ? '100px' : '0px', overflow: 'hidden' }}
-                >
-                  A: {qa.answer}
-                </p>
-              </div>
-            </div>
-          ))}
-          {isEditing && (
+        <p className="text-[20px] opacity-80" id="hotel-faskedquestion">
+          Frequently asked question
+        </p>
+        {hotelDetail.questionAnswers?.map((qa, index) => (
+          <div className="flex flex-row px-[10px]" key={index}>
             <Button
-              className="rounded-[10px] bg-[#4190ed] font-itim text-[14px] text-white w-[150px] h-[40px] mx-[70px]"
-              onClick={onClickEditAddress}
+              onClick={() => toggleAnswer(index)}
+              className="items-top flex h-[30px] flex-row gap-[10px] align-top"
             >
-              Edit Address
-            </Button> 
-          )}
-          {splitLine}
+              {isShowAnswers[index] ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
+            </Button>
+            <div className="flex flex-col gap-[10px]">
+              <p className="text-[20px] opacity-100">Q: {qa.question}</p>
+              <p
+                className="text-[20px] opacity-80 transition-all duration-500 ease-in-out"
+                style={{ maxHeight: isShowAnswers[index] ? '100px' : '0px', overflow: 'hidden' }}
+              >
+                A: {qa.answer}
+              </p>
+            </div>
+          </div>
+        ))}
+        {isEditing && (
+          <Button
+            className="mx-[70px] h-[40px] w-[150px] rounded-[10px] bg-[#4190ed] font-itim text-[14px] text-white"
+            onClick={onClickEditAddress}
+          >
+            Edit Address
+          </Button>
+        )}
+        {splitLine}
       </div>
       <Snackbar
         open={isSnackBarOpen}

@@ -30,7 +30,7 @@ export default function NavBar() {
           src="/logo.png"
           height={90}
           width={300}
-          style={{ width: 'auto', height: '100%' }}
+          style={{ width: 'auto', height: '100%', userSelect: 'none', pointerEvents: 'none' }}
           alt="logo"
           priority={true}
         />
