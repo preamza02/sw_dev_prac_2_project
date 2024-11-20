@@ -1,6 +1,7 @@
 'use client';
 import { useContext } from 'react';
 import { HotelsContext } from '@/context/HotelContext';
+import React from 'react';
 
 export default function BookingSection() {
   const { currentBookingList } = useContext(HotelsContext);

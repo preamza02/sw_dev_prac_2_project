@@ -3,6 +3,7 @@ import { ErrorResponse } from '../interfaces';
 import { BASE_URL } from '@/config/config';
 export default async function registerUser(user: User): Promise<User | ErrorResponse> {
   try {
+    console.log('Registering user:', user);
     const response = await fetch(`${BASE_URL}/api/v1/auth/register`, {
       method: 'POST',
       headers: {

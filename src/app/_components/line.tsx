@@ -1,3 +1,4 @@
+import React from 'react';
 export default function Line() {
   return (
     <div className="my-5 flex h-auto flex-col items-center">

@@ -5,6 +5,7 @@ import getHotels from '@/api/hotel/getHotels.api';
 import getBooking from '@/api/booking/getBooking';
 import { getCookie } from 'cookies-next';
 import searchHandle from '@/utils/searchHandle';
+import React from 'react';
 
 interface THotelContext {
   searchQuery: string;

@@ -42,6 +42,10 @@ export interface ErrorResponse {
   message: string;
 }
 
+export interface RegisterErrorResponse {
+  success: boolean;
+}
+
 export interface BookingRequest {
   bookingDate: string;
   checkoutDate: string;

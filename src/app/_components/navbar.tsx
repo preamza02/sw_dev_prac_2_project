@@ -5,6 +5,7 @@ import { useContext } from 'react';
 import { AuthContext } from '@/context/AuthContext';
 import { deleteCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
+import React from 'react';
 
 export default function NavBar() {
   const { isLogin, currentUser, setIsLogin, setCurrentUser } = useContext(AuthContext);

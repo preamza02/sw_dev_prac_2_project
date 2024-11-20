@@ -10,6 +10,7 @@ import { useState, useContext } from 'react';
 import { useRouter } from 'next/navigation';
 import { AuthContext } from '@/context/AuthContext';
 import { LoginResponse } from '@/api/interfaces';
+import React from 'react';
 
 export default function LoginHomePage() {
   const router = useRouter();

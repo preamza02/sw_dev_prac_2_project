@@ -30,7 +30,9 @@ export default function RootLayout({
                 <BookingSection />
               </div>
               <Line />
-              <div className="flex w-full flex-col pl-4">{children}</div>
+              <div className="scrollbar-custom flex w-full flex-col overflow-y-scroll pl-8">
+                {children}
+              </div>
             </div>
           </body>
         </HotelsProvider>

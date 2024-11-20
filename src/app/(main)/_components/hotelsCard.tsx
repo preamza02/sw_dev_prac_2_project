@@ -7,6 +7,7 @@ import { Hotel } from '@/api/interfaces';
 import { HotelsContext } from '@/context/HotelContext';
 import bookingOnclick from '../_utils/bookingOnclick';
 import { useRouter } from 'next/navigation';
+import React from 'react';
 
 interface HotelsCardProps {
   hotel: Hotel; // Define the prop to accept the hotel data

@@ -1,9 +1,12 @@
 'use client';
+import React from 'react';
 import AuthContainer from '../_component/authContainer';
-import LinkButton from '@/app/_components/linkButton';
+import ActionButton from '@/app/_components/actionButton';
 import AuthFormElement from '../_component/authFormElement';
 import AuthSelectElement from '../_component/authSelectElement';
+import registerUser from '@/api/user/register.api';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 export default function RegisterHomePage() {
   const [userName, setUserName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -12,6 +15,7 @@ export default function RegisterHomePage() {
   const [confirmPassWord, setConfirmPassword] = useState<string>('');
   const typeList = ['user', 'admin'];
   const [type, setType] = useState<string>(typeList[0]);
+  const router = useRouter();
   return (
     <AuthContainer>
       <div className="flex flex-col space-y-1">
@@ -52,12 +56,28 @@ export default function RegisterHomePage() {
         ></AuthSelectElement>
       </div>
       <div className="mx-auto w-4/5 space-y-2">
-        <LinkButton
-          link="Enter"
+        <ActionButton
+          onClick={async () => {
+            const response = await registerUser({
+              name: userName,
+              email,
+              tel,
+              password,
+              role: type,
+              createdAt: new Date().toISOString(),
+            });
+            console.log('Register response:', response, 'message' in Response);
+            if ('message' in response) {
+              alert('Register failed. Please check your credentials.');
+            } else {
+              router.push('/login');
+              alert('Register successfully');
+            }
+          }}
           title="Register"
           bgColor="#4190ED"
           textColor="#FFFFFF"
-        ></LinkButton>
+        ></ActionButton>
       </div>
     </AuthContainer>
   );

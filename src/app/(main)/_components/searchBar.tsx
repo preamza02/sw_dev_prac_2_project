@@ -5,6 +5,7 @@ import { HotelsContext } from '@/context/HotelContext';
 import { useRouter } from 'next/navigation';
 import { Hotel } from '@/api/interfaces';
 import searchHandle from '@/utils/searchHandle';
+import React from 'react';
 
 export default function SearchBar() {
   const { currentUser } = useContext(AuthContext);
