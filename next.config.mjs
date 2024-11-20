@@ -1,8 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  images: {
-    domains: ['cf.bstatic.com'], // Add the external domain here
-  },
+    images: {
+        remotePatterns: [
+            {
+                hostname: "*",
+            },
+        ],
+        domains: ['cf.bstatic.com'], // Add the external domain here
+    },
 };
 
 export default nextConfig;
