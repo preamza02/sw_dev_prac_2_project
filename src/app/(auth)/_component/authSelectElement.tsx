@@ -11,7 +11,7 @@ export default function AuthSelectElement({
   setValue: (value: string) => void;
 }) {
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { name, value } = e.target;
+    const { value } = e.target;
     setValue(value);
   };
   return (

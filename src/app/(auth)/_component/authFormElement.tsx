@@ -11,7 +11,7 @@ export default function AuthFormElement({
   type?: 'email' | 'text' | 'password' | 'tel';
 }) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
+    const { value } = e.target;
     setValue(value);
   };
   return (

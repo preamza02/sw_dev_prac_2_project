@@ -3,7 +3,6 @@ import { useContext } from 'react';
 import { AuthContext } from '@/context/AuthContext';
 import { HotelsContext } from '@/context/HotelContext';
 import { useRouter } from 'next/navigation';
-import { Hotel } from '@/api/interfaces';
 import searchHandle from '@/utils/searchHandle';
 import React from 'react';
 

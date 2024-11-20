@@ -76,10 +76,10 @@ export interface GetBookingResponse {
 
 export interface DeleteBookingResponse {
   success: boolean;
-  data: any;
+  data: object | object[];
 }
 
 export interface UpdateBookingResponse {
   success: boolean;
-  data: any;
+  data: object | object[];
 }
