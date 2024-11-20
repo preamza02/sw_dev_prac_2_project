@@ -2,18 +2,55 @@
 import React from 'react';
 import { useState } from 'react';
 import { Button } from '@mui/material';
+import { Booking } from '@/api/interfaces';
+import deleteBooking from '@/api/booking/deleteBooking';
+import updateBooking from '@/api/booking/updateBooking';
+import { getCookie } from 'cookies-next';
 
-export default function BookedHotelCard() {
+type BookedHotelCardProps = {
+  booking: Booking;
+};
+
+export default function BookedHotelCard({ booking }: BookedHotelCardProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const startDateString = '01 May 2021';
-  const endDateString = '03 May 2021';
+  const startDateString = new Date(booking.bookingDate).toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
+  const [startDateForInput, setStartDateForInput] = useState(
+    new Date(booking.bookingDate).toISOString().split('T')[0],
+  );
+  const endDateString = new Date(booking.checkoutDate).toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
+  const [endDateForInput, setEndDateForInput] = useState(
+    new Date(booking.checkoutDate).toISOString().split('T')[0],
+  );
 
   const onClickEdit = () => {
-    console.log('Edit');
+    const token = getCookie('my_token');
+    if (!token) {
+      return;
+    }
+    console.log(booking._id);
+    console.log(startDateForInput);
+    console.log(endDateForInput);
+    updateBooking(token as string, booking._id, startDateForInput, endDateForInput).then((data) => {
+      console.log(data);
+    });
   };
 
   const onClickDelete = () => {
-    console.log('Delete');
+    const token = getCookie('my_token');
+    if (!token) {
+      return;
+    }
+    deleteBooking(token as string, booking._id).then((data) => {
+      console.log(data);
+    });
   };
 
   return (
@@ -22,8 +59,8 @@ export default function BookedHotelCard() {
       onClick={() => setIsEditing(!isEditing)}
     >
       <div className="flex items-center justify-between">
-        <h1 className="text-[24px] font-bold">Hotel name</h1>
-        <p>address</p>
+        <h1 className="text-[24px] font-bold">{booking.hotel.name}</h1>
+        <p>{booking.hotel.address}</p>
       </div>
       {!isEditing && (
         <p>
@@ -35,9 +72,21 @@ export default function BookedHotelCard() {
         <div onClick={(e) => e.stopPropagation()}>
           <div className="my-4 border-b"></div>
           <p>Check-in</p>
-          <input type="date" className="mb-4 w-full" id="check-in" />
+          <input
+            type="date"
+            className="mb-4 w-full"
+            id="check-in"
+            value={startDateForInput}
+            onChange={(e) => setStartDateForInput(e.target.value)}
+          />
           <p>Check-out</p>
-          <input type="date" className="mb-4 w-full" id="check-out" />
+          <input
+            type="date"
+            className="mb-4 w-full"
+            id="check-out"
+            value={endDateForInput}
+            onChange={(e) => setEndDateForInput(e.target.value)}
+          />
           <div className="mt-4 flex justify-between">
             <Button onClick={onClickEdit} variant="outlined" className="w-[120px]">
               Save

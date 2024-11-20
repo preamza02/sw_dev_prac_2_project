@@ -58,6 +58,7 @@ export interface Booking {
   user: string;
   hotel: hotelBooking;
   createdAt: string;
+  _id: string;
 }
 
 export interface hotelBooking {
@@ -71,4 +72,14 @@ export interface GetBookingResponse {
   success: boolean;
   count: number;
   data: Booking[];
+}
+
+export interface DeleteBookingResponse {
+  success: boolean;
+  data: any;
+}
+
+export interface UpdateBookingResponse {
+  success: boolean;
+  data: any;
 }

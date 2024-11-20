@@ -7,7 +7,7 @@ import { getCookie } from 'cookies-next';
 import searchHandle from '@/utils/searchHandle';
 import React from 'react';
 
-interface THotelContext {
+export interface THotelContext {
   searchQuery: string;
   currentBookingList: Booking[];
   allHotelList: Hotel[];

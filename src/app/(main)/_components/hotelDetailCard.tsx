@@ -13,6 +13,10 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import FacilityCard from '@main/_components/facililtyCard';
 
+import createBooking from '@/api/booking/createBooking';
+import { getCookie } from 'cookies-next';
+import { BookingRequest } from '@/api/interfaces';
+
 import {
   getHotelDetailByID,
   deleteHotelByID,
@@ -20,8 +24,6 @@ import {
   createHotel,
   addFacility,
 } from '@main/_apis/hotel';
-
-import bookingOnclick from '../_utils/bookingOnclick';
 
 type HotelDetailCardProps = {
   isEditing: boolean;
@@ -37,7 +39,6 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
   const [isEditAddressCardShow, setIsEditAddressCardShow] = useState(false);
   const [isUploadImageCardShow, setIsUploadImageCardShow] = useState(false);
   const [onPreviewImageURL, setOnPreviewImageURL] = useState('');
-
   const { checkInDate, checkOutDate } = useContext(HotelsContext);
 
   const severityMapping: { [key: string]: 'error' | 'warning' | 'info' | 'success' } = {
@@ -73,13 +74,14 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
     });
   };
   const onClickEditOrCreate = () => {
+    const token = getCookie('my_token');
     if (isCreating) {
-      createHotel(hotelDetail).then(() => {
+      createHotel(token as string, hotelDetail).then(() => {
         setSnackBarMessage('Hotel created');
         setIsSnackBarOpen(true);
       });
     } else if (hotelID) {
-      updateHotelByID(hotelID, hotelDetail).then(() => {
+      updateHotelByID(token as string, hotelID, hotelDetail).then(() => {
         setSnackBarMessage('Hotel updated');
         setIsSnackBarOpen(true);
       });
@@ -87,9 +89,25 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
   };
   const onClickBook = () => {
     if (!hotelID) return;
-    bookingOnclick(checkInDate, checkOutDate, hotelID).then(() => {
+
+    const token = getCookie('my_token');
+    if (!token) {
       setIsSnackBarOpen(true);
-      setSnackBarMessage('Booking success');
+      setSnackBarMessage('Please login');
+      return;
+    }
+
+    const bookingRequest: BookingRequest = {
+      bookingDate: checkInDate.toISOString(),
+      checkoutDate: checkOutDate.toISOString(),
+      createdAt: new Date().toISOString(),
+    };
+    createBooking(token as string, hotelID, bookingRequest).then((res) => {
+      if ('message' in res) {
+        alert('Booking fail (check in date must be earlier than check out date)');
+      }
+      setSnackBarMessage('Booking success, please check your booking in booking card');
+      setIsSnackBarOpen(true);
     });
   };
   const onClickUploadImage = () => {
