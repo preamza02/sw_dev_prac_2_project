@@ -101,7 +101,7 @@ export async function deleteHotelByID(hotelID: string): Promise<void> {
   }
 }
 
-export async function updateHotelByID(hotelID: string, hotelDetail: HotelDetail): Promise<void> {
+export async function updateHotelByID(token: string, hotelID: string, hotelDetail: HotelDetail): Promise<void> {
   console.log(`Update hotel ID: ${hotelID}`);
   console.log(hotelDetail);
   console.log(hotelDetailToRequest(hotelDetail));
@@ -109,6 +109,7 @@ export async function updateHotelByID(hotelID: string, hotelDetail: HotelDetail)
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(hotelDetailToRequest(hotelDetail)),
   });
@@ -122,11 +123,12 @@ export async function updateHotelByID(hotelID: string, hotelDetail: HotelDetail)
   }
 }
 
-export async function createHotel(hotelDetail: HotelDetail): Promise<void> {
+export async function createHotel(token: string, hotelDetail: HotelDetail): Promise<void> {
   const response = await fetch(baseURI + 'hotels', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(hotelDetail),
   });

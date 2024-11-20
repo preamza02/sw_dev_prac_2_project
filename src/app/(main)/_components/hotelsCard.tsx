@@ -7,6 +7,7 @@ import { Hotel } from '@/api/interfaces';
 import createBooking from '@/api/booking/createBooking';
 import { HotelsContext } from '@/context/HotelContext';
 import { getCookie } from 'cookies-next';
+import { useRouter } from 'next/navigation';
 
 interface HotelsCardProps {
   hotel: Hotel; // Define the prop to accept the hotel data
@@ -16,8 +17,9 @@ export default function HotelsCard({ hotel }: HotelsCardProps) {
   const { currentUser } = useContext(AuthContext);
   const { checkInDate, checkOutDate } = useContext(HotelsContext);
   const imageUrl = hotel.picture ? hotel.picture : '/img/test_hotels.png';
+  const router = useRouter();
   return (
-    <div className="flex h-[150px] w-full flex-col overflow-hidden rounded-2xl border-2 shadow">
+    <div className="flex h-[150px] w-full flex-col overflow-hidden rounded-2xl border-2 shadow" onClick={() => router.push(`/${hotel.id}`)}>
       <div className="flex h-full w-full flex-row items-center justify-center">
         <div className="relative h-full w-1/4 overflow-hidden">
           {/* Dynamically use the hotel's picture if available */}
@@ -59,6 +61,7 @@ export default function HotelsCard({ hotel }: HotelsCardProps) {
                   checkoutDate: checkOutDate.toISOString().split('T')[0],
                   createdAt: new Date().toISOString().split('T')[0],
                 });
+                e.stopPropagation();
               }}
               className="rounded bg-green-500 px-6 py-2 text-white"
             >
