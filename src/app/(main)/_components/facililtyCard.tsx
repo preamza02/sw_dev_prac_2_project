@@ -1,6 +1,5 @@
 import FacilityDetail from '../_interfaces/facilityDetail';
 import Image from 'next/image';
-import React from 'react';
 
 export default function FacilityCard({ facilityTitle, facilityImage }: FacilityDetail) {
   return (
