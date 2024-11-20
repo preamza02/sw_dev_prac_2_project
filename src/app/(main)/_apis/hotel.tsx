@@ -9,6 +9,9 @@ import PoolIcon from '@mui/icons-material/Pool';
 import FacilityDetail from '@main/_interfaces/facilityDetail';
 import { BASE_URL } from '@/config/config';
 import { Hotel } from '@/api/interfaces';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/redux/store';
+import { Facility } from '../../../../interfaces';
 
 export async function getHotelDetailByID(hotelID: string): Promise<HotelDetail> {
   console.log(`Get hotel ID: ${hotelID}`);
@@ -159,6 +162,12 @@ export async function bookHotel(hotelID: string): Promise<void> {
 
 export async function addFacility(hotelID: string, facilityDetail: FacilityDetail): Promise<void> {
   // TODO: add facility
+  const dispatch = useDispatch<AppDispatch>();
+  const facility: Facility = {
+    name: facilityDetail.facilityTitle,
+    logo: facilityDetail.facilityImage,
+    hotelId: hotelID,
+  };
 }
 
 export function responseToHotelDetail(response: Hotel): HotelDetail {
