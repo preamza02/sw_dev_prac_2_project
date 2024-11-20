@@ -1,5 +1,9 @@
 # Hotel booking Project
 
+## website
+
+https://sw-dev-prac-2-project-theta.vercel.app/
+
 > This project is the final project of course Software Development Practice 2 (frontend development) 🌟
 
 Resources

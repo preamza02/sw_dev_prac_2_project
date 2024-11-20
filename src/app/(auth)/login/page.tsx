@@ -20,15 +20,19 @@ export default function LoginHomePage() {
   const loginOnclick = async () => {
     try {
       const response = await loginUser(email, password);
-      console.log('Login response:', response, (response as LoginResponse).token);
+      if ('message' in response) {
+        throw new Error('Login failed');
+      } else {
+        console.log('Login response:', response, (response as LoginResponse).token);
 
-      await setCookie('my_token', (response as LoginResponse).token, {
-        maxAge: 60 * 60 * 24 * 30, // 30 days
-      });
-      setIsLogin(true);
+        await setCookie('my_token', (response as LoginResponse).token, {
+          maxAge: 60 * 60 * 24 * 30, // 30 days
+        });
+        setIsLogin(true);
 
-      // Navigate to root path after login
-      router.push('/');
+        // Navigate to root path after login
+        router.push('/');
+      }
     } catch (error) {
       console.error('Login failed:', error);
       alert('Login failed. Please check your credentials.');
