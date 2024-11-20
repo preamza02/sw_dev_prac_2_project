@@ -106,9 +106,10 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
     createBooking(token as string, hotelID, bookingRequest).then((res) => {
       if ('message' in res) {
         alert('Booking fail (check in date must be earlier than check out date)');
+      } else {
+        setSnackBarMessage('Booking success, please check your booking in booking card');
+        setIsSnackBarOpen(true);
       }
-      setSnackBarMessage('Booking success, please check your booking in booking card');
-      setIsSnackBarOpen(true);
     });
   };
   const onClickUploadImage = () => {

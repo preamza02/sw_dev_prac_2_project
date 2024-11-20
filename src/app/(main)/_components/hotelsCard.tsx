@@ -24,8 +24,11 @@ export default function HotelsCard({ hotel }: HotelsCardProps) {
       className="flex h-[150px] w-full flex-col overflow-hidden rounded-2xl border-2 shadow"
       onClick={() => router.push(`/${hotel.id}`)}
     >
-      <Link
-        href={`/${hotel.id}`}
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
+          router.push(`/${hotel.id as string}`);
+        }}
         className="flex h-full w-full flex-row items-center justify-center"
       >
         <div className="relative h-full w-1/4 overflow-hidden">
@@ -87,7 +90,7 @@ export default function HotelsCard({ hotel }: HotelsCardProps) {
             )}
           </div>
         </div>
-      </Link>
+      </div>
     </div>
   );
 }
