@@ -10,7 +10,6 @@ import PoolIcon from '@mui/icons-material/Pool';
 import FacilityDetail from '@main/_interfaces/facilityDetail';
 import { BASE_URL } from '@/config/config';
 import { Hotel } from '@/api/interfaces';
-import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
 import { Facility } from '../../../../interfaces';
 import { addFacility as reduxAddFacility } from '@/redux/features/facilitiesSlide';
@@ -98,7 +97,10 @@ export async function getHotelDetailByID(hotelID: string): Promise<HotelDetail> 
 }
 
 export async function deleteHotelByID(token: string, hotelID: string): Promise<void> {
-  const response = await fetch(BASE_URL + '/api/v1/hotels/' + hotelID, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
+  const response = await fetch(BASE_URL + '/api/v1/hotels/' + hotelID, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  });
   const data = await response.json();
   console.log(data);
 
@@ -136,13 +138,22 @@ export async function updateHotelByID(
 }
 
 export async function createHotel(token: string, hotelDetail: HotelDetail): Promise<void> {
+  const hotel: Hotel = {
+    picture: hotelDetail.hotelPicture,
+    name: hotelDetail.hotelName,
+    tel: hotelDetail.hotelTel,
+    address: hotelDetail.hotelAddress,
+    district: hotelDetail.hotelDistrict,
+    province: hotelDetail.hotelProvince,
+    postalcode: hotelDetail.hotelPostalCode,
+  };
   const response = await fetch(BASE_URL + '/api/v1/hotels', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(hotelDetail),
+    body: JSON.stringify(hotel),
   });
   const data = await response.json();
   console.log(data);
@@ -155,7 +166,9 @@ export async function createHotel(token: string, hotelDetail: HotelDetail): Prom
 }
 
 export async function bookHotel(hotelID: string): Promise<void> {
-  const response = await fetch(BASE_URL + '/api/v1/hotels/' + hotelID + '/bookings', { method: 'POST' });
+  const response = await fetch(BASE_URL + '/api/v1/hotels/' + hotelID + '/bookings', {
+    method: 'POST',
+  });
   const data = await response.json();
   console.log(data);
 
@@ -166,7 +179,11 @@ export async function bookHotel(hotelID: string): Promise<void> {
   }
 }
 
-export async function addFacility(hotelID: string, facilityDetail: FacilityDetail, dispatch: AppDispatch): Promise<void> {
+export async function addFacility(
+  hotelID: string,
+  facilityDetail: FacilityDetail,
+  dispatch: AppDispatch,
+): Promise<void> {
   // TODO: add facility
   const facility: Facility = {
     name: facilityDetail.facilityTitle,
@@ -174,7 +191,6 @@ export async function addFacility(hotelID: string, facilityDetail: FacilityDetai
     hotelId: hotelID,
   };
   dispatch(reduxAddFacility(facility));
-
 }
 
 export function responseToHotelDetail(response: Hotel): HotelDetail {

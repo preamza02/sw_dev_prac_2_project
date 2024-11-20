@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import { useContext } from 'react';
 import { AuthContext } from '@/context/AuthContext';
-import { Booking, Hotel } from '@/api/interfaces';
+import { Hotel } from '@/api/interfaces';
 import { HotelsContext } from '@/context/HotelContext';
 import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';

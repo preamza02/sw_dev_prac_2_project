@@ -18,7 +18,7 @@ import FacilityCard from '@main/_components/facililtyCard';
 
 import createBooking from '@/api/booking/createBooking';
 import { getCookie } from 'cookies-next';
-import { BookingRequest } from '@/api/interfaces';
+import { BookingRequest, Hotel } from '@/api/interfaces';
 
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
@@ -26,6 +26,8 @@ import { AppDispatch } from '@/redux/store';
 import { useAppSelector } from '@/redux/store';
 
 import FacilityDetail from '../_interfaces/facilityDetail';
+
+import { useRouter } from 'next/navigation';
 
 import {
   getHotelDetailByID,
@@ -50,8 +52,19 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
   const [isUploadImageCardShow, setIsUploadImageCardShow] = useState(false);
   const [isInputFacilityCardShow, setIsInputFacilityCardShow] = useState(false);
   const [onPreviewImageURL, setOnPreviewImageURL] = useState('');
-  const { checkInDate, checkOutDate, currentBookingList, setCurrentBookingList } = useContext(HotelsContext);
-  const [newFacility, setFacility] = useState<FacilityDetail>({ facilityTitle: 'New facility', facilityImage: '' });
+  const router = useRouter();
+  const {
+    checkInDate,
+    checkOutDate,
+    currentHotelList,
+    setCurrentHotelList,
+    currentBookingList,
+    setCurrentBookingList,
+  } = useContext(HotelsContext);
+  const [newFacility, setFacility] = useState<FacilityDetail>({
+    facilityTitle: 'New facility',
+    facilityImage: '',
+  });
 
   const dispatch = useDispatch<AppDispatch>();
   const facilities = useAppSelector((state) => state.facilitiesSlice.facilities);
@@ -62,7 +75,9 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
       facilityTitle: facility.name,
       facilityImage: facility.logo,
     }));
-    const appendedFacilities = hotelDetail.facilityDetails ? hotelDetail.facilityDetails.concat(convertedFacilities) : convertedFacilities;
+    const appendedFacilities = hotelDetail.facilityDetails
+      ? hotelDetail.facilityDetails.concat(convertedFacilities)
+      : convertedFacilities;
     setHotelDetail({ ...hotelDetail, facilityDetails: appendedFacilities });
   }, [facilities]);
 
@@ -93,7 +108,9 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
         facilityTitle: facility.name,
         facilityImage: facility.logo,
       }));
-      const appendedFacilities = resHotelDetail.facilityDetails ? resHotelDetail.facilityDetails.concat(convertedFacilities) : convertedFacilities;
+      const appendedFacilities = resHotelDetail.facilityDetails
+        ? resHotelDetail.facilityDetails.concat(convertedFacilities)
+        : convertedFacilities;
       setHotelDetail({ ...resHotelDetail, facilityDetails: appendedFacilities });
       setOnPreviewImageURL(resHotelDetail.hotelPicture);
     });
@@ -111,13 +128,43 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
     const token = getCookie('my_token');
     if (isCreating) {
       createHotel(token as string, hotelDetail).then(() => {
+        const newHotel: Hotel = {
+          _id: hotelDetail.hotelID,
+          id: hotelDetail.hotelID,
+          name: hotelDetail.hotelName,
+          address: hotelDetail.hotelAddress,
+          tel: hotelDetail.hotelTel,
+          picture: hotelDetail.hotelPicture,
+          district: hotelDetail.hotelDistrict,
+          province: hotelDetail.hotelProvince,
+          postalcode: hotelDetail.hotelPostalCode,
+        };
+        setCurrentHotelList([...currentHotelList, newHotel]);
         setSnackBarMessage('Hotel created');
         setIsSnackBarOpen(true);
+        router.push('/');
       });
     } else if (hotelID) {
       updateHotelByID(token as string, hotelID, hotelDetail).then(() => {
+        const newHotelList: Hotel[] = [];
+        for (let i = 0; i < currentHotelList.length; i++) {
+          if (currentHotelList[i]._id === hotelID) {
+            currentHotelList[i].address = hotelDetail.hotelAddress;
+            currentHotelList[i].district = hotelDetail.hotelDistrict;
+            currentHotelList[i].province = hotelDetail.hotelProvince;
+            currentHotelList[i].postalcode = hotelDetail.hotelPostalCode;
+            currentHotelList[i].name = hotelDetail.hotelName;
+            currentHotelList[i].tel = hotelDetail.hotelTel;
+            currentHotelList[i].picture = hotelDetail.hotelPicture;
+            newHotelList.push(currentHotelList[i]);
+          } else {
+            newHotelList.push(currentHotelList[i]);
+          }
+        }
+        setCurrentHotelList(newHotelList);
         setSnackBarMessage('Hotel updated');
         setIsSnackBarOpen(true);
+        router.push('/');
       });
     }
   };
@@ -394,7 +441,13 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
             <FacilityCard
               key={index}
               facilityTitle={facility.facilityTitle}
-              facilityImage={facility.facilityImage? facility.facilityImage : <Lock sx={{ fontSize: 50 }} color="secondary"/>}
+              facilityImage={
+                facility.facilityImage ? (
+                  facility.facilityImage
+                ) : (
+                  <Lock sx={{ fontSize: 50 }} color="secondary" />
+                )
+              }
             />
           ))}
           {isEditing && (
