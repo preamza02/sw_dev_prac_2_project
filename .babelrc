@@ -1,6 +1,3 @@
 {
-  "presets": [
-    "@babel/preset-react", // For JSX support
-    "@babel/preset-typescript" // For TypeScript support
-  ]
+  "presets": ["@babel/preset-env", "@babel/preset-react"]
 }

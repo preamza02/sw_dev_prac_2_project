@@ -1,43 +1,39 @@
 {
   "compilerOptions": {
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "incremental": true,
+    "types": ["jest", "@testing-library/jest-dom"], // Make sure Jest and Jest DOM types are included
+    "lib": ["dom", "dom.iterable", "esnext"], // Use latest ECMAScript features and browser DOM types
+    "allowJs": true, // Allow JS files in the project if you have any
+    "skipLibCheck": true, // Skip type checking of declaration files (speeds up compilation)
+    "strict": true, // Enable strict mode for TypeScript
+    "noEmit": true, // Don't generate output files (Jest handles this)
+    "esModuleInterop": true, // Allow default imports from non-ES modules
+    "module": "esnext", // Use the ES modules system
+    "moduleResolution": "bundler", // Use bundler resolution strategy
+    "resolveJsonModule": true, // Allow importing JSON files as modules
+    "isolatedModules": true, // Ensures that each file can be transpiled independently
+    "jsx": "react-jsx", // React JSX transformation (use react-jsx for React 17+)
+    "incremental": true, // Incremental compilation for faster builds
     "plugins": [
       {
-        "name": "next"
+        "name": "next" // For Next.js support
       }
     ],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@main/*": [
-        "./src/app/(main)/*"
-      ]
+      "@/*": ["./src/*"], // Path alias for src
+      "@main/*": ["./src/app/(main)/*"] // Path alias for main directory
     },
-    "target": "ES2017"
+    "target": "ES2017", // Target ES2017 for compatibility
+    "baseUrl": ".", // Ensures path aliases are resolved correctly
+    "noUnusedLocals": true, // Optionally, catch unused locals in your code
+    "noUnusedParameters": true // Optionally, catch unused parameters in your functions
   },
   "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
+    "next-env.d.ts", // Include Next.js environment file
+    "**/*.ts", // Include TypeScript files
+    "**/*.tsx", // Include TSX files for React components
+    ".next/types/**/*.ts" // Include Next.js types if you are using Next.js
   ],
   "exclude": [
-    "node_modules"
+    "node_modules" // Exclude node_modules to prevent unnecessary type checking
   ]
 }

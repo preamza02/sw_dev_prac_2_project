@@ -1,9 +1,18 @@
 module.exports = {
-  preset: 'ts-jest',
+  preset: 'ts-jest', // This tells Jest to use ts-jest for transforming TypeScript
   transform: {
-    '^.+\\.(ts|tsx)$': 'ts-jest', // Use ts-jest for transforming TypeScript files
-    '^.+\\.(js|jsx|mjs|cjs|ts|tsx)$': 'babel-jest', // Use babel-jest for JS/JSX/TS/TSX files
+    '^.+\\.(ts|tsx)$': 'ts-jest', // Ensure ts-jest transforms TypeScript and JSX files
   },
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'], // Ensure Jest knows how to handle these extensions
-  transformIgnorePatterns: ['node_modules/(?!(@babel|some-other-library)/)'], // Handle specific node_modules if needed
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'], // Ensure jest.setup.ts exists
+  testEnvironment: 'jest-environment-jsdom',
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'], // Allow Jest to understand .ts, .tsx, .js, and .jsx files
+  globals: {
+    'ts-jest': {
+      tsconfig: 'tsconfig.json', // Use your tsconfig.json for TypeScript settings
+    },
+  },
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1', // Maps '@/' to the 'src/' directory
+    '\\.(css|less|scss|svg)$': 'identity-obj-proxy',
+  },
 };
