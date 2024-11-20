@@ -1,10 +1,11 @@
 'use client';
+import React from 'react';
 import HotelDetailCard from '@/app/(main)/_components/hotelDetailCard';
 import { useContext } from 'react';
 import { AuthContext } from '@/context/AuthContext';
 import { useEffect } from 'react';
 
-export default function HotelDetailPage({ params }: { params: { hid: string } }) {
+export default function HotelDetailEditPage({ params }: { params: { hid: string } }) {
   const { currentUser } = useContext(AuthContext);
   console.log('currentUser', currentUser);
 

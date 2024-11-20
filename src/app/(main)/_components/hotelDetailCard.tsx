@@ -4,6 +4,8 @@ import Image from 'next/image';
 import { Button } from '@mui/material';
 import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+// lock icon from mui
+import Lock from '@mui/icons-material/Lock';
 
 import { useState, useEffect, useContext } from 'react';
 import { HotelsContext } from '@/context/HotelContext';
@@ -17,6 +19,13 @@ import FacilityCard from '@main/_components/facililtyCard';
 import createBooking from '@/api/booking/createBooking';
 import { getCookie } from 'cookies-next';
 import { BookingRequest } from '@/api/interfaces';
+
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/redux/store';
+
+import { useAppSelector } from '@/redux/store';
+
+import FacilityDetail from '../_interfaces/facilityDetail';
 
 import {
   getHotelDetailByID,
@@ -39,8 +48,23 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
   const [snackBarMessage, setSnackBarMessage] = useState('');
   const [isEditAddressCardShow, setIsEditAddressCardShow] = useState(false);
   const [isUploadImageCardShow, setIsUploadImageCardShow] = useState(false);
+  const [isInputFacilityCardShow, setIsInputFacilityCardShow] = useState(false);
   const [onPreviewImageURL, setOnPreviewImageURL] = useState('');
   const { checkInDate, checkOutDate } = useContext(HotelsContext);
+  const [newFacility, setFacility] = useState<FacilityDetail>({ facilityTitle: 'New facility', facilityImage: '' });
+
+  const dispatch = useDispatch<AppDispatch>();
+  const facilities = useAppSelector((state) => state.facilitiesSlice.facilities);
+  useEffect(() => {
+    console.log('facilities', facilities);
+    const matchedFacilities = facilities.filter((facility) => facility.hotelId === hotelID);
+    const convertedFacilities: FacilityDetail[] = matchedFacilities.map((facility) => ({
+      facilityTitle: facility.name,
+      facilityImage: facility.logo,
+    }));
+    const appendedFacilities = hotelDetail.facilityDetails ? hotelDetail.facilityDetails.concat(convertedFacilities) : convertedFacilities;
+    setHotelDetail({ ...hotelDetail, facilityDetails: appendedFacilities });
+  }, [facilities]);
 
   const severityMapping: { [key: string]: 'error' | 'warning' | 'info' | 'success' } = {
     'Booking success': 'success',
@@ -63,13 +87,22 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
     if (!hotelID) return;
     getHotelDetailByID(hotelID).then((resHotelDetail) => {
       setHotelDetail(resHotelDetail);
+      // appedn facility from redux
+      const matchedFacilities = facilities.filter((facility) => facility.hotelId === hotelID);
+      const convertedFacilities: FacilityDetail[] = matchedFacilities.map((facility) => ({
+        facilityTitle: facility.name,
+        facilityImage: facility.logo,
+      }));
+      const appendedFacilities = resHotelDetail.facilityDetails ? resHotelDetail.facilityDetails.concat(convertedFacilities) : convertedFacilities;
+      setHotelDetail({ ...resHotelDetail, facilityDetails: appendedFacilities });
       setOnPreviewImageURL(resHotelDetail.hotelPicture);
     });
   }, [hotelID, setHotelDetail]);
 
   const onClickDelete = () => {
     if (!hotelID) return;
-    deleteHotelByID(hotelID).then(() => {
+    const token = getCookie('my_token');
+    deleteHotelByID(token as string, hotelID).then(() => {
       setSnackBarMessage('Hotel deleted');
       setIsSnackBarOpen(true);
     });
@@ -118,7 +151,7 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
   };
   const onAddFacility = () => {
     if (!hotelID) return;
-    addFacility(hotelID, { facilityTitle: 'New Facility', facilityImage: '' }).then(() => {
+    addFacility(hotelID, newFacility, dispatch).then(() => {
       setSnackBarMessage('Facility added');
       setIsSnackBarOpen(true);
     });
@@ -273,6 +306,29 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
     </div>
   );
 
+  const inputFacilityCard = (
+    <div className="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.5)]">
+      <div className="flex flex-col gap-[16px] rounded-[20px] bg-[#ffffff] p-[16px] shadow-lg">
+        <h1 className="text-[27px]">Add Facility</h1>
+        <div className="flex flex-row items-center gap-[16px]">
+          <div className="w-[150px] text-[20px]">Facility Title</div>:
+          <input
+            type="text"
+            value={newFacility.facilityTitle}
+            onChange={(e) => setFacility({ ...newFacility, facilityTitle: e.target.value })}
+            className="w-auto rounded-[10px] border-[1px] border-[#000000] p-[8px] text-[20px]"
+          />
+        </div>
+        <Button
+          className="mx-[70px] h-[40px] rounded-[10px] bg-[#4190ed] font-itim text-[14px] text-white"
+          onClick={onAddFacility}
+        >
+          Save
+        </Button>
+      </div>
+    </div>
+  );
+
   const splitLine = <div className="h-[1px] w-full bg-[#000000]" />;
 
   return (
@@ -328,7 +384,7 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
             <FacilityCard
               key={index}
               facilityTitle={facility.facilityTitle}
-              facilityImage={facility.facilityImage}
+              facilityImage={facility.facilityImage? facility.facilityImage : <Lock sx={{ fontSize: 50 }} color="secondary"/>}
             />
           ))}
           {isEditing && (

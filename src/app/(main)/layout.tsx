@@ -21,9 +21,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <AuthProvider>
-        <HotelsProvider>
-          <body className="h-screen max-h-screen">
+      <body className="h-screen max-h-screen">
+        <AuthProvider>
+          <HotelsProvider>
             <NavBar></NavBar>
             <SearchBar></SearchBar>
             <div style={{ height: 'calc(100vh - 140px)' }} className="flex w-full flex-row">
@@ -31,11 +31,13 @@ export default function RootLayout({
                 <BookingSection />
               </div>
               <Line />
-              <div className="scrollbar-custom flex w-full flex-col overflow-y-scroll pl-8">{children}</div>
+              <ReduxProvider>
+                <div className="scrollbar-custom flex w-full flex-col overflow-y-scroll pl-8">{children}</div>
+              </ReduxProvider>
             </div>
-          </body>
-        </HotelsProvider>
-      </AuthProvider>
+          </HotelsProvider>
+        </AuthProvider>
+      </body>
     </html>
   );
 }

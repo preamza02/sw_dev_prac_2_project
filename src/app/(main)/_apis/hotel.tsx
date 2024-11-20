@@ -13,6 +13,7 @@ import { Hotel } from '@/api/interfaces';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
 import { Facility } from '../../../../interfaces';
+import { addFacility as reduxAddFacility } from '@/redux/features/facilitiesSlide';
 
 export async function getHotelDetailByID(hotelID: string): Promise<HotelDetail> {
   console.log(`Get hotel ID: ${hotelID}`);
@@ -96,8 +97,8 @@ export async function getHotelDetailByID(hotelID: string): Promise<HotelDetail> 
   };
 }
 
-export async function deleteHotelByID(hotelID: string): Promise<void> {
-  const response = await fetch(BASE_URL + '/hotels/' + hotelID, { method: 'DELETE' });
+export async function deleteHotelByID(token: string, hotelID: string): Promise<void> {
+  const response = await fetch(BASE_URL + '/api/v1/hotels/' + hotelID, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
   const data = await response.json();
   console.log(data);
 
@@ -165,14 +166,15 @@ export async function bookHotel(hotelID: string): Promise<void> {
   }
 }
 
-export async function addFacility(hotelID: string, facilityDetail: FacilityDetail): Promise<void> {
+export async function addFacility(hotelID: string, facilityDetail: FacilityDetail, dispatch: AppDispatch): Promise<void> {
   // TODO: add facility
-  const dispatch = useDispatch<AppDispatch>();
   const facility: Facility = {
     name: facilityDetail.facilityTitle,
     logo: facilityDetail.facilityImage,
     hotelId: hotelID,
   };
+  dispatch(reduxAddFacility(facility));
+
 }
 
 export function responseToHotelDetail(response: Hotel): HotelDetail {
