@@ -50,7 +50,7 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
   const [isUploadImageCardShow, setIsUploadImageCardShow] = useState(false);
   const [isInputFacilityCardShow, setIsInputFacilityCardShow] = useState(false);
   const [onPreviewImageURL, setOnPreviewImageURL] = useState('');
-  const { checkInDate, checkOutDate } = useContext(HotelsContext);
+  const { checkInDate, checkOutDate, currentBookingList, setCurrentBookingList } = useContext(HotelsContext);
   const [newFacility, setFacility] = useState<FacilityDetail>({ facilityTitle: 'New facility', facilityImage: '' });
 
   const dispatch = useDispatch<AppDispatch>();
@@ -139,9 +139,18 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
     createBooking(token as string, hotelID, bookingRequest).then((res) => {
       if ('message' in res) {
         alert('Booking fail (check in date must be earlier than check out date)');
+      } else {
+        res.data.hotel = {
+          _id: hotelDetail.hotelID,
+          id: hotelDetail.hotelID,
+          name: hotelDetail.hotelName,
+          address: hotelDetail.hotelAddress,
+          tel: hotelDetail.hotelTel,
+        };
+        setCurrentBookingList([...currentBookingList, res.data]);
+        setSnackBarMessage('Booking success, please check your booking in booking card');
+        setIsSnackBarOpen(true);
       }
-      setSnackBarMessage('Booking success, please check your booking in booking card');
-      setIsSnackBarOpen(true);
     });
   };
   const onClickUploadImage = () => {
@@ -215,7 +224,7 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
           <Image
             src={onPreviewImageURL}
             alt="Hotel Banner"
-            // layout="fill"
+            layout="fill"
             objectFit="cover"
             className="rounded-[20px]"
           />
@@ -373,7 +382,7 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
         <p className="text-[20px] opacity-80" id="hotel-description">
           {hotelDetail.hotelName} is an exclusive property in the vibrant Ratchada area of Bangkok,
           offering excellent hospitality and convenient amenities. With a fitness center, indoor
-          pool, and shared lounge/TV area, it's perfect for two travelers.
+          pool, and shared lounge/TV area, it is perfect for two travelers.
         </p>
         {splitLine}
         <p className="text-[20px] opacity-80" id="hotel-facility">

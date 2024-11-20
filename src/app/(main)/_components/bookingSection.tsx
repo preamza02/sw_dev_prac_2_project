@@ -9,7 +9,7 @@ export default function BookingSection() {
   return (
     <div className="flex flex-col gap-4">
       {currentBookingList.map((booking) => (
-        <div key={`${booking.hotel.id}:${booking.checkoutDate}:${booking.checkoutDate}`}>
+        <div key={`${booking._id}:${booking.checkoutDate}:${booking.checkoutDate}`}>
           <BookedHotelCard booking={booking} />
         </div>
       ))}

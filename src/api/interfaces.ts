@@ -52,6 +52,11 @@ export interface BookingRequest {
   createdAt: string;
 }
 
+export interface BookingResponse {
+  success: boolean;
+  data: Booking;
+}
+
 export interface Booking {
   bookingDate: string;
   checkoutDate: string;

@@ -190,7 +190,7 @@ export function responseToHotelDetail(response: Hotel): HotelDetail {
   };
 }
 
-export function hotelDetailToRequest(hotelDetail: HotelDetail): any {
+export function hotelDetailToRequest(hotelDetail: HotelDetail): Hotel {
   return {
     picture: hotelDetail.hotelPicture,
     name: hotelDetail.hotelName,
