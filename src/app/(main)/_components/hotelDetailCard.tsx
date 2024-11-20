@@ -192,7 +192,7 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
           <Image
             src={onPreviewImageURL}
             alt="Hotel Banner"
-            // layout="fill"
+            layout="fill"
             objectFit="cover"
             className="rounded-[20px]"
           />
