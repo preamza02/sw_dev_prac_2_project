@@ -29,6 +29,7 @@ export const AuthProvider = ({ children }: Props) => {
   useEffect(() => {
     if (getCookie('my_token')) {
       setIsLogin(true);
+      console.log('isLogin', isLogin);
     }
   }, []);
 
@@ -37,9 +38,11 @@ export const AuthProvider = ({ children }: Props) => {
       return;
     }
     getUserProfile(getCookie('my_token') as string).then((Response) => {
+      console.log('Response', Response);
       if ('message' in Response) {
         return;
       }
+      console.log('setting current user');
       setCurrentUser((Response as UserResponse).data);
     });
   }, [isLogin]);

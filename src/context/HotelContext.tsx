@@ -6,7 +6,7 @@ import getBooking from '@/api/booking/getBooking';
 import { getCookie } from 'cookies-next';
 import searchHandle from '@/utils/searchHandle';
 
-interface THotelContext {
+export interface THotelContext {
   searchQuery: string;
   currentBookingList: Booking[];
   allHotelList: Hotel[];
