@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import { useContext } from 'react';
 import { AuthContext } from '@/context/AuthContext';
-import { Hotel } from '@/api/interfaces';
+import { Booking, Hotel } from '@/api/interfaces';
 import { HotelsContext } from '@/context/HotelContext';
 import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
@@ -15,7 +15,8 @@ interface HotelsCardProps {
 
 export default function HotelsCard({ hotel }: HotelsCardProps) {
   const { currentUser } = useContext(AuthContext);
-  const { checkInDate, checkOutDate } = useContext(HotelsContext);
+  const { checkInDate, checkOutDate, currentBookingList, setCurrentBookingList } =
+    useContext(HotelsContext);
   const imageUrl = hotel.picture ? hotel.picture : '/img/test_hotels.png';
   const router = useRouter();
   return (
@@ -55,8 +56,9 @@ export default function HotelsCard({ hotel }: HotelsCardProps) {
           </div>
           <div className="m-auto w-fit">
             <button
-              onClick={(e) => {
+              onClick={async (e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 if (checkOutDate <= checkInDate) {
                   alert('Check out date must be later than check in date');
                   return;
@@ -65,12 +67,23 @@ export default function HotelsCard({ hotel }: HotelsCardProps) {
                 if (!token) {
                   return;
                 }
-                createBooking(token as string, hotel.id as string, {
+                const response = await createBooking(token as string, hotel.id as string, {
                   bookingDate: checkInDate.toISOString().split('T')[0],
                   checkoutDate: checkOutDate.toISOString().split('T')[0],
                   createdAt: new Date().toISOString().split('T')[0],
                 });
-                e.stopPropagation();
+                if ('message' in response) {
+                  alert('Booking failed. Please check your credentials.');
+                } else {
+                  response.data.hotel = {
+                    _id: hotel.id as string,
+                    id: hotel.id as string,
+                    name: hotel.name,
+                    address: hotel.address,
+                    tel: hotel.tel as string,
+                  };
+                  setCurrentBookingList([...currentBookingList, response.data]);
+                }
               }}
               className="rounded bg-green-500 px-6 py-2 text-white"
             >

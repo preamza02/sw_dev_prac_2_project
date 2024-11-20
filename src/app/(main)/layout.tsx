@@ -20,9 +20,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <AuthProvider>
-        <HotelsProvider>
-          <body className="h-screen max-h-screen">
+      <body className="h-screen max-h-screen">
+        <AuthProvider>
+          <HotelsProvider>
             <NavBar></NavBar>
             <SearchBar></SearchBar>
             <div style={{ height: 'calc(100vh - 140px)' }} className="flex w-full flex-row">
@@ -34,9 +34,9 @@ export default function RootLayout({
                 {children}
               </div>
             </div>
-          </body>
-        </HotelsProvider>
-      </AuthProvider>
+          </HotelsProvider>
+        </AuthProvider>
+      </body>
     </html>
   );
 }

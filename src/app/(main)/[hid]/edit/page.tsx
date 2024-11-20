@@ -1,4 +1,5 @@
 'use client';
+import React from 'react';
 import HotelDetailCard from '@/app/(main)/_components/hotelDetailCard';
 import { useContext } from 'react';
 import { AuthContext } from '@/context/AuthContext';

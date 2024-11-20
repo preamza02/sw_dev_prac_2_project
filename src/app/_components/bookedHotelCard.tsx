@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { HotelsContext } from '@/context/HotelContext';
 import { Button } from '@mui/material';
 import { Booking } from '@/api/interfaces';
 import deleteBooking from '@/api/booking/deleteBooking';
@@ -12,6 +13,7 @@ type BookedHotelCardProps = {
 };
 
 export default function BookedHotelCard({ booking }: BookedHotelCardProps) {
+  const { currentBookingList, setCurrentBookingList } = useContext(HotelsContext);
   const [isEditing, setIsEditing] = useState(false);
   const startDateString = new Date(booking.bookingDate).toLocaleDateString('en-GB', {
     day: 'numeric',
@@ -30,7 +32,7 @@ export default function BookedHotelCard({ booking }: BookedHotelCardProps) {
     new Date(booking.checkoutDate).toISOString().split('T')[0],
   );
 
-  const onClickEdit = () => {
+  const onClickEdit = async () => {
     const token = getCookie('my_token');
     if (!token) {
       return;
@@ -38,9 +40,27 @@ export default function BookedHotelCard({ booking }: BookedHotelCardProps) {
     console.log(booking._id);
     console.log(startDateForInput);
     console.log(endDateForInput);
-    updateBooking(token as string, booking._id, startDateForInput, endDateForInput).then((data) => {
-      console.log(data);
-    });
+    const res = await updateBooking(
+      token as string,
+      booking._id,
+      startDateForInput,
+      endDateForInput,
+    );
+    if ('message' in res) {
+      alert(res.message);
+    } else {
+      const newBooking: Booking[] = [];
+      for (const item of currentBookingList) {
+        if (item._id === booking._id) {
+          item.bookingDate = startDateForInput;
+          item.checkoutDate = endDateForInput;
+          newBooking.push(item);
+        } else {
+          newBooking.push(item);
+        }
+      }
+      setCurrentBookingList(newBooking);
+    }
   };
 
   const onClickDelete = () => {
@@ -49,7 +69,11 @@ export default function BookedHotelCard({ booking }: BookedHotelCardProps) {
       return;
     }
     deleteBooking(token as string, booking._id).then((data) => {
-      console.log(data);
+      if ('message' in data) {
+        alert(data.message);
+      } else {
+        setCurrentBookingList(currentBookingList.filter((item) => item._id !== booking._id));
+      }
     });
   };
 

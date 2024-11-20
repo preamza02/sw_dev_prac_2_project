@@ -1,11 +1,11 @@
-import { Booking, BookingRequest, ErrorResponse } from '../interfaces';
+import { BookingResponse, BookingRequest, ErrorResponse } from '../interfaces';
 import { BASE_URL } from '@/config/config';
 
 export default async function createBooking(
   token: string,
   hotelId: string,
   BookingRequest: BookingRequest,
-): Promise<Booking | ErrorResponse> {
+): Promise<BookingResponse | ErrorResponse> {
   try {
     const response = await fetch(`${BASE_URL}/api/v1/Hotels/${hotelId}/bookings`, {
       method: 'POST',

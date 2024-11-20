@@ -40,7 +40,8 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
   const [isEditAddressCardShow, setIsEditAddressCardShow] = useState(false);
   const [isUploadImageCardShow, setIsUploadImageCardShow] = useState(false);
   const [onPreviewImageURL, setOnPreviewImageURL] = useState('');
-  const { checkInDate, checkOutDate } = useContext(HotelsContext);
+  const { checkInDate, checkOutDate, currentBookingList, setCurrentBookingList } =
+    useContext(HotelsContext);
 
   const severityMapping: { [key: string]: 'error' | 'warning' | 'info' | 'success' } = {
     'Booking success': 'success',
@@ -107,6 +108,14 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
       if ('message' in res) {
         alert('Booking fail (check in date must be earlier than check out date)');
       } else {
+        res.data.hotel = {
+          _id: hotelDetail.hotelID,
+          id: hotelDetail.hotelID,
+          name: hotelDetail.hotelName,
+          address: hotelDetail.hotelAddress,
+          tel: hotelDetail.hotelTel,
+        };
+        setCurrentBookingList([...currentBookingList, res.data]);
         setSnackBarMessage('Booking success, please check your booking in booking card');
         setIsSnackBarOpen(true);
       }
