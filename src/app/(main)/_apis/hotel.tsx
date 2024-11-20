@@ -117,7 +117,7 @@ export async function updateHotelByID(
   console.log(`Update hotel ID: ${hotelID}`);
   console.log(hotelDetail);
   console.log(hotelDetailToRequest(hotelDetail));
-  const response = await fetch(BASE_URL + '/hotels/' + hotelID, {
+  const response = await fetch(BASE_URL + '/api/v1/hotels/' + hotelID, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -136,7 +136,7 @@ export async function updateHotelByID(
 }
 
 export async function createHotel(token: string, hotelDetail: HotelDetail): Promise<void> {
-  const response = await fetch(BASE_URL + '/hotels', {
+  const response = await fetch(BASE_URL + '/api/v1/hotels', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -155,7 +155,7 @@ export async function createHotel(token: string, hotelDetail: HotelDetail): Prom
 }
 
 export async function bookHotel(hotelID: string): Promise<void> {
-  const response = await fetch(BASE_URL + '/hotels/' + hotelID + '/bookings', { method: 'POST' });
+  const response = await fetch(BASE_URL + '/api/v1/hotels/' + hotelID + '/bookings', { method: 'POST' });
   const data = await response.json();
   console.log(data);
 

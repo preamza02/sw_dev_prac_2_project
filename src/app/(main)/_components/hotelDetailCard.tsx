@@ -164,6 +164,7 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
       setSnackBarMessage('Facility added');
       setIsSnackBarOpen(true);
     });
+    setIsInputFacilityCardShow(false);
   };
 
   const buttonGroup = isEditing ? (
@@ -399,7 +400,7 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
           {isEditing && (
             <Button
               className="flex h-[150px] w-[150px] flex-col items-center justify-center gap-[10px] rounded-[20px] bg-white py-[33px] shadow-lg"
-              onClick={onAddFacility}
+              onClick={() => setIsInputFacilityCardShow(!isInputFacilityCardShow)}
             >
               <AddCircleIcon sx={{ fontSize: 50 }} color="disabled" />
             </Button>
@@ -452,6 +453,7 @@ export default function HotelDetailCard({ isEditing, isCreating, hotelID }: Hote
       </Snackbar>
       {isEditAddressCardShow && editAddressCard}
       {isUploadImageCardShow && uploadImageCard}
+      {isInputFacilityCardShow && inputFacilityCard}
     </div>
   );
 }
