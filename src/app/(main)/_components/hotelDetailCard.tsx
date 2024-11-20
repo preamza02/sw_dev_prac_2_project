@@ -16,8 +16,6 @@ import FacilityCard from '@main/_components/facililtyCard';
 import createBooking from '@/api/booking/createBooking';
 import { getCookie } from 'cookies-next';
 import { BookingRequest } from '@/api/interfaces';
-import { useContext } from 'react';
-import { HotelsContext } from '@/context/HotelContext';
 
 import {
   getHotelDetailByID,
@@ -26,8 +24,6 @@ import {
   createHotel,
   addFacility,
 } from '@main/_apis/hotel';
-
-import bookingOnclick from '../_utils/bookingOnclick';
 
 type HotelDetailCardProps = {
   isEditing: boolean;
