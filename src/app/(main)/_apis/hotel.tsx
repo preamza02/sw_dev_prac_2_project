@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import React from 'react';
 
 import { HotelDetail, QuestionAnswer } from '@main/_interfaces/hotelDetail';
 
@@ -107,7 +108,11 @@ export async function deleteHotelByID(hotelID: string): Promise<void> {
   }
 }
 
-export async function updateHotelByID(token: string, hotelID: string, hotelDetail: HotelDetail): Promise<void> {
+export async function updateHotelByID(
+  token: string,
+  hotelID: string,
+  hotelDetail: HotelDetail,
+): Promise<void> {
   console.log(`Update hotel ID: ${hotelID}`);
   console.log(hotelDetail);
   console.log(hotelDetailToRequest(hotelDetail));
@@ -130,7 +135,7 @@ export async function updateHotelByID(token: string, hotelID: string, hotelDetai
 }
 
 export async function createHotel(token: string, hotelDetail: HotelDetail): Promise<void> {
-  const response = await fetch(baseURI + 'hotels', {
+  const response = await fetch(BASE_URL + '/hotels', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

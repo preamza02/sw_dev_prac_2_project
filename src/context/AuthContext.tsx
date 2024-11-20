@@ -3,6 +3,7 @@ import { ReactNode, createContext, useEffect, useState } from 'react';
 import getUserProfile from '@/api/user/getUserProfile.api';
 import { User, UserResponse } from '@/api/interfaces';
 import { getCookie } from 'cookies-next';
+import React from 'react';
 
 interface TAuthContext {
   currentUser: User | null;

@@ -42,6 +42,10 @@ export interface ErrorResponse {
   message: string;
 }
 
+export interface RegisterErrorResponse {
+  success: boolean;
+}
+
 export interface BookingRequest {
   bookingDate: string;
   checkoutDate: string;
@@ -72,10 +76,10 @@ export interface GetBookingResponse {
 
 export interface DeleteBookingResponse {
   success: boolean;
-  data: any;
+  data: object | object[];
 }
 
 export interface UpdateBookingResponse {
   success: boolean;
-  data: any;
+  data: object | object[];
 }

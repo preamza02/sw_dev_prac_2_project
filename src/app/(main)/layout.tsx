@@ -21,23 +21,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <ReduxProvider>
-        <AuthProvider>
-          <HotelsProvider>
-            <body className="h-screen max-h-screen">
-              <NavBar></NavBar>
-              <SearchBar></SearchBar>
-              <div style={{ height: 'calc(100vh - 140px)' }} className="flex w-full flex-row">
-                <div className="w-1/4 pr-4">
-                  <BookingSection />
-                </div>
-                <Line />
-                <div className="flex w-full flex-col pl-4">{children}</div>
+      <AuthProvider>
+        <HotelsProvider>
+          <body className="h-screen max-h-screen">
+            <NavBar></NavBar>
+            <SearchBar></SearchBar>
+            <div style={{ height: 'calc(100vh - 140px)' }} className="flex w-full flex-row">
+              <div className="w-1/4 pr-4">
+                <BookingSection />
               </div>
-            </body>
-          </HotelsProvider>
-        </AuthProvider>
-      </ReduxProvider>
+              <Line />
+              <div className="scrollbar-custom flex w-full flex-col overflow-y-scroll pl-8">{children}</div>
+            </div>
+          </body>
+        </HotelsProvider>
+      </AuthProvider>
     </html>
   );
 }

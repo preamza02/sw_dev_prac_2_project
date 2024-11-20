@@ -5,29 +5,18 @@ import LinkButton from '@/app/_components/linkButton';
 import ActionButton from '@/app/_components/actionButton';
 import AuthFormElement from '../_component/authFormElement';
 import loginUser from '@/api/user/login.api';
-import getUserProfile from '@/api/user/getUserProfile.api';
 import { useState, useContext } from 'react';
 import { useRouter } from 'next/navigation';
 import { AuthContext } from '@/context/AuthContext';
 import { LoginResponse } from '@/api/interfaces';
+import React from 'react';
 
 export default function LoginHomePage() {
   const router = useRouter();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const { setIsLogin, setCurrentUser } = useContext(AuthContext);
+  const { setIsLogin } = useContext(AuthContext);
 
-  const handleLogout = () => {
-    // Clear the authentication cookie
-    deleteCookie('my_token');
-
-    // Update the Auth Context
-    setIsLogin(false);
-    setCurrentUser(null);
-
-    // Redirect to the login page
-    router.push('/login');
-  };
   const loginOnclick = async (event: React.MouseEvent<HTMLButtonElement>) => {
     try {
       const response = await loginUser(email, password);

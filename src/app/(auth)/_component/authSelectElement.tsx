@@ -1,3 +1,4 @@
+import React from 'react';
 export default function AuthSelectElement({
   title,
   options,
@@ -10,7 +11,7 @@ export default function AuthSelectElement({
   setValue: (value: string) => void;
 }) {
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { name, value } = e.target;
+    const { value } = e.target;
     setValue(value);
   };
   return (
