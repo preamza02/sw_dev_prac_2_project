@@ -1,6 +1,6 @@
 import React from 'react';
 import HotelDetailCard from '@/app/(main)/_components/hotelDetailCard';
-type tParams = Promise<{ hid: string[] }>;
+type tParams = Promise<{ hid: string }>;
 
 export default async function HotelDetailEditPage({ params }: { params: tParams }) {
   // Show loading state if hotelID is not yet available
@@ -9,5 +9,5 @@ export default async function HotelDetailEditPage({ params }: { params: tParams 
     return <div>Loading...</div>;
   }
 
-  return <HotelDetailCard isEditing={true} hotelID={hid[0]} />;
+  return <HotelDetailCard isEditing={true} hotelID={hid} />;
 }
